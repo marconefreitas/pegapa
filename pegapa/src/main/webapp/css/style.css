@@ -1,0 +1,56 @@
+@CHARSET "ISO-8859-1";
+
+.container, .container-fluid{
+	padding-right: 15px;
+	padding-left: 15px;
+	background-color: #f9f9f9;
+}
+
+.row{
+	margin-bottom: 20px;
+}
+
+[class*="col-"], header, footer, nav, aside, section, div[role="main"]{
+	padding-top: 15px;
+	padding-bottom: 15px;
+	background-color: #f5f5f5;
+	background-color: rgba(86, 61, 124,.15 );
+	border: 1px solid #ddd;
+	border:1px solid rgba(86, 61, 124,.2 );
+	text-align: center;
+	
+}
+div[role="main"]{
+	background-color: #fff;
+}
+
+div[role="main"], nav, aside{
+	height: 400px;
+}
+section[role="application"]{
+	margin-right: 0;
+}
+.sub-section{
+	/*float:left;*/
+	height:inherit;
+}
+
+.container-inferior{
+	display: flex; 
+	flex-direction: row; 
+	justify-content: space-between;
+}
+
+.border-fieldset{
+	border: 1px groove #ddd;
+    padding: 0 1.4em 0.4em 1.4em;
+    margin: 0 -1em 1.5em;
+    -webkit-box-shadow:  0px 0px 0px 0px #000;
+    box-shadow:  0px 0px 0px 0px #000;
+}
+.border-fieldset legend{
+	width:inherit; /* Or auto */
+    padding:0 10px; /* To give a bit of padding on the left and right */
+    border-bottom:none;
+    font-size: inherit;
+}

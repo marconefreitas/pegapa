@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ARQUIVO DE CONFIGURAÇÃO NECESSARIO PARA O CONTAINER TOMCAT -->
+<Context>
+	<Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" maxActive="30" maxIdle="10"
+				name="jdbc/mysql"
+				type="javax.sql.DataSource"
+				url="jdbc:mysql://localhost/pegapa"
+				username="root"
+				password="root">
+		
+	</Resource>
+	
+</Context>
