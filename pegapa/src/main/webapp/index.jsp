@@ -22,47 +22,15 @@
 		<header class="row" >Header</header>
 		
 		<div class="row" >
-			<div role="main">
-				<ul class="carr">
-					<li>	
-						<div class="login" id="login-fornecedor-box">
-						<p class="titulo-form">Cadastro De Fornecedores</p>
-						    <input type="text" placeholder="Username" name="usernameFornecedor" id="usernameFornecedor" class="user-login">  
-						  	<input type="password" placeholder="password" name="passwordFornecedor" id="passwordFornecedor" class="user-pass">  
-						  	<a href="#" class="forgot">Esqueceu a Senha?</a>
-						  	<input type="submit" value="Login" onclick="autenticaUsuario('1');" id="login-fornecedor">
-						  						<br/>ou
-						  	<input type="submit" value="Cadastro" style="margin-top:5px;" id="ativa-cadastrar-fornecedor">
-						</div>
-					</li>
-					<li>
-						<div class="login" id="login-usuario-box" >
-							<form name="login-usuario-box" method="post" action="cadastrarUsuario?login=S">
-								<p class="titulo-form">Cadastro De Usuários</p>
-							    <input type="text" placeholder="Username" id="usernameUsuario" class="user-login" name="username-user">  
-							  	<input type="password" placeholder="password" id="passwordUsuario" class="user-pass"  name="password-user">  
-							  	<a href="#" class="forgot">Esqueceu a Senha?</a>
-							  	<input type="submit" value="Login" onclick="" id="login-usuario">
-							  						<br/>ou
-							  	<input type="button" value="Cadastro" style="margin-top:5px;" id="ativa-cadastrar-usuario">
-						  	</form>
-						</div>
-					</li>
-					
-					<li>
-						<div class="login">
-						<form  name="login-profissional-box" method="post" action="cadastrarProfissional?login=S" >
-							<p class="titulo-form">Cadastro De Profissionais</p>
-						    <input type="text" placeholder="Username" name="username-prof" id="username-prof" class="user-login">  
-						  	<input type="password" placeholder="password" name="password-prof" id="password-prof" class="user-pass">  
-						  	<a href="#" class="forgot">Esqueceu a Senha?</a>
-						  	<input type="submit" value="Login" onclick="" id="login-profissional">
-						  						<br/>ou
-						  	<input type="button" value="Cadastro" style="margin-top:5px;" id="ativa-cadastrar-profissional">
-						</form>
-						</div>
-					</li>
-				</ul>
+			<div role="main" class="main">
+				<div class="filho-da-main">
+					<h2>Escolha uma Opcao</h2>
+					<ul>
+						<li><a href="#" onclick="renderizaLoginUsuario();"><img src="estilos/images/tp_user/usuario.png" alt="Usuário" title="Usuário"></a></li>
+						<li><a href="#" onclick="renderizaLoginFornecedor();"><img src="estilos/images/tp_user/fornecedores.png" alt="Fornecedor" title="Fornecedor"></a></li>
+						<li><a href="#" onclick="renderizaLoginProfissional();"><img src="estilos/images/tp_user/engenheiro.png" alt="Profissional" title="Profissional"></a></li>
+					</ul>
+				</div>
 			</div>
 			<!-- Modal de cadastro de usuario -->
 			<jsp:include page="cadastro-usuario.jsp" ></jsp:include>
@@ -80,6 +48,39 @@
 <!-- 			<nav class="col-md-2 col-md-pull-10"> -->
 <!-- 				NAVIGATOR -->
 <!-- 			</nav> -->
+				<div class="login" id="login-fornecedor-box" style="display: none;">
+					<form name="login-fornecedo-box" method="post" action="cadastrarFornecedor?login=S" >
+						<p class="titulo-form">Cadastro De Fornecedores</p>
+					    <input type="text" placeholder="Username" name="usernameFornecedor" id="usernameFornecedor" class="user-login">  
+					  	<input type="password" placeholder="password" name="passwordFornecedor" id="passwordFornecedor" class="user-pass">  
+					  	<a href="#" class="forgot">Esqueceu a Senha?</a>
+					  	<input type="submit" value="Login" onclick="" id="login-fornecedor">
+					  						<br/>ou
+					  	<input type="submit" value="Cadastro" style="margin-top:5px;" id="ativa-cadastrar-fornecedor">
+					</form>
+				</div>
+				<div class="login" id="login-usuario-box" style="display:none;" >
+					<form name="login-usuario-box" method="post" action="cadastrarUsuario?login=S">
+						<p class="titulo-form">Cadastro De Usuários</p>
+					    <input type="text" placeholder="Username" id="usernameUsuario" class="user-login" name="username-user">  
+					  	<input type="password" placeholder="password" id="passwordUsuario" class="user-pass"  name="password-user">  
+					  	<a href="#" class="forgot">Esqueceu a Senha?</a>
+					  	<input type="submit" value="Login" onclick="" id="login-usuario">
+					  						<br/>ou
+					  	<input type="button" value="Cadastro" style="margin-top:5px;" id="ativa-cadastrar-usuario">
+				  	</form>
+				</div>
+				<div class="login" id="login-profissional-box" style="display:none;">
+					<form name="login-profissional-box" method="post" action="cadastrarProfissional?login=S" >
+						<p class="titulo-form">Cadastro De Profissionais</p>
+					    <input type="text" placeholder="Username" name="username-prof" id="username-prof" class="user-login">  
+					  	<input type="password" placeholder="password" name="password-prof" id="password-prof" class="user-pass">  
+					  	<a href="#" class="forgot">Esqueceu a Senha?</a>
+					  	<input type="submit" value="Login" onclick="" id="login-profissional">
+					  						<br/>ou
+					  	<input type="button" value="Cadastro" onclick=""  style="margin-top:5px;" id="ativa-cadastrar-profissional">
+					</form>
+				</div>
 		</div>
 		<footer class="row">
 			footer
@@ -97,7 +98,7 @@
 
 <!-- Javascripts da aplicação -->
 <script type="text/javascript" src="javascript/usuario.js" charset="utf-8"></script>
-<!-- <script type="text/javascript" src="javascript/profissional.js" charset="utf-8"></script> -->
+<script type="text/javascript" src="javascript/profissional.js" charset="utf-8"></script>
 <script type="text/javascript" src="javascript/recursos.js" charset="utf-8"></script>
 <script type="text/javascript" src="javascript/busca.js" charset="utf-8"></script>
 
@@ -122,8 +123,24 @@ $(document).ready(function(){
 	$("#ativa-cadastrar-fornecedor").click(function(){
 		$('#modal-cadastro-fornecedor').modal();
 	});
+
+
+	
 	
 });
+
+function renderizaLoginFornecedor(){
+	$('.filho-da-main').replaceWith($('#login-fornecedor-box').css('display', 'block'));
+}
+function renderizaLoginUsuario(){
+	$('.filho-da-main').replaceWith($('#login-usuario-box').css('display', 'block'));
+}
+function renderizaLoginProfissional(){
+	$('.filho-da-main').replaceWith($('#login-profissional-box').css('display', 'block'));
+}
+function renderizarOFilhoDaMain(){
+	//TODO - IMPLEMENTAR CODIGO AQUI QUANDO FOR NECESSARIO VOLTAR A MOSTRAR AS 3 IMAGENS INICIAIS
+}
 </script>
 </body>
 </html>
