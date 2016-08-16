@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>PegaPá</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- Bootstrap -->
@@ -14,12 +15,16 @@
 	<!-- Bootstrap select -->
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
 	
-	
+	<link rel="shortcut icon" href="icopegapa.png" >
 	
 </head>
 <body>
 	<div class="container-fluid" >
-		<header class="row" >Header</header>
+		<header class="row header-page" >
+			<figure style="float:left; padding-right:15px; top:1px; position:absolute;">
+ 				<img src="estilos/images/logo_pegapa.png" width="130px;" />
+			</figure>
+		</header>
 		
 		<div class="row" >
 			<div role="main" class="main">
@@ -35,7 +40,7 @@
 			<!-- Modal de cadastro de usuario -->
 			<jsp:include page="cadastro-usuario.jsp" ></jsp:include>
 			<!-- Modal de cadastro de profissional -->
-			<jsp:include page="cadastro-profissional.jsp"></jsp:include>
+			<jsp:include page="cadastro-profissional.jsp" ></jsp:include>
 			
 			<section role="application" class="row" style="background-color: #fff;">
 				<jsp:include page="localizar.jsp"></jsp:include>
@@ -60,7 +65,7 @@
 					</form>
 				</div>
 				<div class="login" id="login-usuario-box" style="display:none;" >
-					<form name="login-usuario-box" method="post" action="cadastrarUsuario?login=S">
+					<form name="login-usuario-box" method="post" action="ServletUsuario?login=S">
 						<p class="titulo-form">Cadastro De Usuários</p>
 					    <input type="text" placeholder="Username" id="usernameUsuario" class="user-login" name="username-user">  
 					  	<input type="password" placeholder="password" id="passwordUsuario" class="user-pass"  name="password-user">  
@@ -82,8 +87,7 @@
 					</form>
 				</div>
 		</div>
-		<footer class="row">
-			footer
+		<footer class="row footer-page">
 		</footer>
 		
 		

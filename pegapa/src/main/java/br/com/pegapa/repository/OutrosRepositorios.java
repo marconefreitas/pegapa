@@ -7,13 +7,14 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.Expression;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
+import br.com.pegapa.entity.Bairro;
 import br.com.pegapa.entity.Cidade;
+import br.com.pegapa.entity.Comentario;
 import br.com.pegapa.entity.Estado;
 import br.com.pegapa.entity.Profissional;
 
@@ -46,13 +47,20 @@ public class OutrosRepositorios {
 	}
 
 	
-	@SuppressWarnings("unchecked")
 	public List<Cidade> listaCidades(Estado uf){
 		String select = "select c from cidade c where c.estadoFk = :cod_estado";
-		List<Cidade> cidades = (List<Cidade>) this.manager.createQuery(select)
+		List<Cidade> cidades =  this.manager.createQuery(select, Cidade.class)
 				.setParameter("cod_estado", uf)
 				.getResultList();
 		return cidades;
+	}
+	
+	public List<Bairro> listaBairros(Cidade city){
+		String select = "select b from bairro b where b.cidadeFk = :cod_bairro";
+		List<Bairro> bairros =  this.manager.createQuery(select, Bairro.class)
+				.setParameter("cod_bairro", city)
+				.getResultList();
+		return bairros;
 	}
 	
 	public Estado buscaPorPK(Short id){
@@ -60,6 +68,10 @@ public class OutrosRepositorios {
 	}
 	public Cidade buscaCidadePorPK(Integer id){
 		return this.manager.find(Cidade.class, id);
+	}
+	
+	public Bairro buscaBairroPorPk(Integer id){
+		return this.manager.find(Bairro.class, id);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -79,7 +91,7 @@ public class OutrosRepositorios {
 	}
 
 
-	public List<Profissional> localizarProfissionais(String estado, String cidade) {
+	public List<Profissional> localizarProfissionais(String estado, String cidade, String bairro) {
 		Session session = (Session) this.manager.getDelegate();
 		Criteria consulta = session.createCriteria(Profissional.class);
 		if(! "".equals(estado)){
@@ -88,13 +100,20 @@ public class OutrosRepositorios {
 		if(! "".equals(cidade)){
 			consulta.add(Restrictions.eq("cidade", cidade));
 		}
-		
+		if(!"".equals(bairro)){
+			consulta.add(Restrictions.eq("bairro", bairro));
+		}
 		
 		
 		return (List<Profissional>)consulta.list();
 		
 	}
 
+	public List<Comentario> trazComentariosPorProfissional(Profissional prof){
+		return this.manager.createQuery("select c from comentario c where c.profissionalFk.id = :id", Comentario.class)
+				.setParameter("id", prof.getId())
+				.getResultList();
+	}
 
 	public List<Object> localizarFornecedores(String estado, String cidade) {
 		// TODO Auto-generated method stub

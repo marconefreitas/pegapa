@@ -11,12 +11,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.google.gson.annotations.Expose;
+
 
 @Entity(name="estado")
 public class Estado {
 	
+
 	private Short codigo;
+	
+
 	private String uf;
+
 	private String nome;
 	
 	private List<Cidade> cidades;
@@ -53,7 +59,8 @@ public class Estado {
 		this.nome = nome;
 	}
 
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, targetEntity=Cidade.class, mappedBy="estadoFk")
+
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=Cidade.class, mappedBy="estadoFk")
 	public List<Cidade> getCidades() {
 		return cidades;
 	}

@@ -2,52 +2,91 @@ package br.com.pegapa.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.JsonAdapter;
 
 @Entity(name="profissional")
 public class Profissional {
 	
 	
-	
+	@Expose
 	private Integer id;
 	
+	@Expose
 	private String cpf;
 	
+	@Expose
 	private String nome;
 	
+	@Expose
 	private String logradouro;
 	
+	@Expose
 	private String numero;
 	
+	@Expose
 	private String cidade;
 	
+	@Expose
 	private String estado;
 	
+	@Expose
+	private String bairro;
+
+	@Expose
 	private String cep;
 	
+	@Expose
 	private String telefone;
 	
+	@Expose
 	private String celular;
 	
+	@Expose
 	private String email;
+	
+	@Expose
 	private String senha;
 
+	@Expose
 	private String ocupacao;
+	
+	@Expose
 	private String experiencia;
 	
-	@ManyToMany
-	@JoinTable(name = "solicitacao")
-	private List<Profissional> solicitacoes;
+	@Expose
+	private Byte mesesExperiencia;
 	
-
+	@Expose
+	private Short anosExperiencia;
+	
+	private byte[] imagem;
+	
+	
+	private List<Solicitacao> solicitacoes;
+	
+	
+	private List<Comentario> comentarios;
+	
+	
 	public Profissional() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	public Profissional(Integer id){
+		this.id = id;
 	}
 	
 	@Id
@@ -164,7 +203,58 @@ public class Profissional {
 		this.experiencia = experiencia;
 	}
 	
+	@Column(name="bairro", nullable=false, length=60)
+	public String getBairro() {
+		return bairro;
+	}
 
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
+	
+	@Column(length=2, nullable=true, name="mesesExper")
+	public Byte getMesesExperiencia() {
+		return mesesExperiencia;
+	}
+
+	public void setMesesExperiencia(Byte mesesExperiencia) {
+		this.mesesExperiencia = mesesExperiencia;
+	}
+	@Column(length=2, nullable=true, name="anosExper")
+	public Short getAnosExperiencia() {
+		return anosExperiencia;
+	}
+
+	public void setAnosExperiencia(Short anosExperiencia) {
+		this.anosExperiencia = anosExperiencia;
+	}
+
+	@Lob
+	public byte[] getImagem() {
+		return imagem;
+	}
+
+	public void setImagem(byte[] imagem) {
+		this.imagem = imagem;
+	}
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, targetEntity=Solicitacao.class, mappedBy="profissional")
+	public List<Solicitacao> getSolicitacoes() {
+		return solicitacoes;
+	}
+
+	public void setSolicitacoes(List<Solicitacao> solicitacoes) {
+		this.solicitacoes = solicitacoes;
+	}
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="profissionalFk", targetEntity=Comentario.class)
+	public List<Comentario> getComentarios() {
+		return comentarios;
+	}
+
+	public void setComentarios(List<Comentario> comentarios) {
+		this.comentarios = comentarios;
+	}
 
 	@Override
 	public String toString() {
@@ -176,9 +266,5 @@ public class Profissional {
 				+ ", ocupacao=" + ocupacao + ", experiencia=" + experiencia
 				+ "]";
 	}
-	
-	
-	
-	
 	
 }

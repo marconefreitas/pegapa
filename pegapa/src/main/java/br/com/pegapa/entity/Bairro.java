@@ -12,52 +12,42 @@ import javax.persistence.ManyToOne;
 
 import com.google.gson.annotations.Expose;
 
-
-@Entity(name="cidade")
-public class Cidade {
+@Entity(name="bairro")
+public class Bairro {
 	
-	
-	private Integer codigo;
-
-	private String nome;
-	
-	private Estado estadoFk;
-	
-	public Cidade() {
-		// TODO Auto-generated constructor stub
-	}
-
+	@Expose
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer codigo;
+	
+	@Expose
+	@Column(length=100, nullable=false)
+	private String nome;
+	
+	@Expose
+	@ManyToOne
+	@JoinColumn(name="cod_cidade", nullable=false, foreignKey= @ForeignKey(value=ConstraintMode.CONSTRAINT, name="COD_CIDADE_FK"))
+	private Cidade cidadeFk;
+	
+	
 	public Integer getCodigo() {
 		return codigo;
 	}
-
 	public void setCodigo(Integer codigo) {
 		this.codigo = codigo;
 	}
-
-	
-	@Column(name="nome", nullable=false, length=100)
 	public String getNome() {
 		return nome;
 	}
-
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
-	@ManyToOne
-	@JoinColumn(name="cod_estado", nullable=false, foreignKey= @ForeignKey(value=ConstraintMode.CONSTRAINT, name="COD_ESTADO_FK") )
-	public Estado getEstadoFk() {
-		return estadoFk;
+	public Cidade getBairroFk() {
+		return cidadeFk;
 	}
-
-	public void setEstadoFk(Estado estadoFk) {
-		this.estadoFk = estadoFk;
+	public void setBairroFk(Cidade cidadeFk) {
+		this.cidadeFk = cidadeFk;
 	}
-	
-	
 	
 	
 	

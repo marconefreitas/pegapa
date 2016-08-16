@@ -2,6 +2,10 @@
  * 
  */
 
+
+
+
+
 function testeJQuery(){
 	$.ajax({
 		url: "TesteServlet",

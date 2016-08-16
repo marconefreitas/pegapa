@@ -1,12 +1,18 @@
 package br.com.pegapa.entity;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 
 @Entity(name="usuario")
@@ -18,10 +24,16 @@ public class Usuario {
 	private String cpf;
 	private String cnpj;
 	private String telefone;
+	private Endereco endereco;
 	private String celular;
 	private String email;
 	private String senha;
+	private String estado;
+	private String cidade;
 	
+	
+	private List<Comentario> comentarios;
+	private List<Solicitacao> solicitacoes;
 
 	public Usuario() {
 		// TODO Auto-generated constructor stub
@@ -126,6 +138,47 @@ public class Usuario {
 		this.senha = senha;
 	}
 
+	@Embedded
+	public Endereco getEndereco() {
+		return endereco;
+	}
+
+
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
+	}
+	
+	
+	@Column(name="estado", length=15, nullable=false)
+	public String getEstado() {
+		return estado;
+	}
+
+	@Column(name="cidade", length=15, nullable=false)
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+
+	public String getCidade() {
+		return cidade;
+	}
+
+
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
+	}
+
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="usuarioFk", targetEntity=Comentario.class)
+	public List<Comentario> getComentarios() {
+		return comentarios;
+	}
+
+
+	public void setComentarios(List<Comentario> comentarios) {
+		this.comentarios = comentarios;
+	}
+
 
 	@Override
 	public int hashCode() {
@@ -144,7 +197,16 @@ public class Usuario {
 		return result;
 	}
 
-
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, targetEntity=Solicitacao.class, mappedBy="usuario")
+	public List<Solicitacao> getSolicitacoes() {
+		return solicitacoes;
+	}
+	
+	
+	
+	public void setSolicitacoes(List<Solicitacao> solicitacoes) {
+		this.solicitacoes = solicitacoes;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -199,5 +261,9 @@ public class Usuario {
 	public String toString() {	
 		return "Nome: " + this.nome + " Senha: " + this.senha + " Email: " +  this.email;
 	}
+
+
+
+	
 	
 }

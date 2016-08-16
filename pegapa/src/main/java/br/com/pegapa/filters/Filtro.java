@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebFilter("/profissional/*")
+@WebFilter("/usuario/*")
 public class Filtro implements Filter {
 
 	@Override
@@ -33,7 +33,7 @@ public class Filtro implements Filter {
 		if(sessao.getAttribute("usuarioLogado") != null){
 			chain.doFilter(request, response);
 		} else{
-			resposta.sendRedirect("../index.jsp");
+			resposta.sendRedirect("/pegapa/index.jsp");
 		}
 		
 	}

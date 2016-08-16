@@ -29,7 +29,7 @@ $('#cadastrarUsuario').on("click", function(event){
 		}
 		
 		$.ajax({
-			url: "cadastrarUsuario",
+			url: "ServletUsuario",
 			data:  {
 				cadastra: "cadastra",
 				nome : $("#nomeUsuario").val(),
@@ -71,4 +71,19 @@ $("#login-usuario").on("click", function(event){
 		return;
 	}
 	
-})
+});
+
+
+function retornarDadosParaEdicao(){
+	var codUser = $('#cod').val();
+	jQuery.get("ServletUsuario", {editarUsuario: 'S', codUser: codUser});
+}
+
+function alterarDados(){
+	$('#form-edit-user').submit();
+}
+
+function logoutUser(){
+	$('form[name="logout-user"]').submit();
+	jQuery.get("/pegapa/ServletUsuario", {logout: 'S'});
+}

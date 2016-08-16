@@ -33,7 +33,7 @@ public class UsuarioRepository extends PegapaBaseDAO  {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Usuario consultaPorId(Long id){
+	public Usuario consultaPorId(Integer id){
 		return manager.find(Usuario.class, id);
 	}
 	
@@ -70,6 +70,9 @@ public class UsuarioRepository extends PegapaBaseDAO  {
 		this.manager.persist(usr);
 	}
 	
+	public void merge(Usuario usr){
+		this.manager.merge(usr);
+	}
 	
 	public Usuario selectUsuario(String login, String password) {
 		String select = "select u from usuario u where u.email = :login and u.senha = :password";

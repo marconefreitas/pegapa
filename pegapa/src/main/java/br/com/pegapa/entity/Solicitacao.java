@@ -12,11 +12,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-@Entity
+@Entity(name="solicitacao")
 public class Solicitacao {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer idSolicitacao;
 
 	
@@ -25,13 +25,16 @@ public class Solicitacao {
 	private SituacaoSolicitacao situacao;
 	
 	@ManyToOne
-	@JoinColumn(name="id_profissional", foreignKey=@ForeignKey(value=ConstraintMode.CONSTRAINT, name="PROFISSIONAL_FK"))
+	@JoinColumn(name="id_profissional", nullable=false,foreignKey=@ForeignKey(value=ConstraintMode.CONSTRAINT, name="PROFISSIONAL_FK"))
 	private Profissional profissional;
 	
 	
 	@ManyToOne
-	@JoinColumn(name="id_usuario", foreignKey=@ForeignKey(value=ConstraintMode.CONSTRAINT, name="USUARIO_FK"))
+	@JoinColumn(name="id_usuario", nullable=false ,foreignKey=@ForeignKey(value=ConstraintMode.CONSTRAINT, name="USUARIO_FK"))
 	private Usuario usuario;
+	
+	@Column(name="desc_solicitacao", length=250, nullable=false)
+	private String descricaoSolicitacao;
 	
 	
 	public Solicitacao() {
@@ -76,6 +79,16 @@ public class Solicitacao {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+
+	public String getDescricaoSolicitacao() {
+		return descricaoSolicitacao;
+	}
+
+
+	public void setDescricaoSolicitacao(String descricaoSolicitacao) {
+		this.descricaoSolicitacao = descricaoSolicitacao;
 	}
 	
 	

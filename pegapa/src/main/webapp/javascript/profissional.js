@@ -2,6 +2,7 @@
  * 
  */
 
+
 /*
 $("#formProfissional").validate({
 		rules:{
@@ -90,12 +91,20 @@ $("#ocupacao").on("change", function(){
 $('#estado-prof').on("change", function(){
 	executaPesquisaCidade('codigoEstadoProf');
 });
+
 $('#estado-user').on("change", function(){
 	executaPesquisaCidade('codigoEstadoUser');
 });
 $('#localiza-estado').on("change", function(){
 	executaPesquisaCidade('codigoLocaliza');
 });
+$('#cidade-prof').on("change", function(){
+	executaPesquisaBairro('codigoCidadeProf');
+});
+
+$('#localiza-cidade').on("change", function(){
+	executaPesquisaBairro('codigoCidadeLocaliza');
+})
 
 function executaPesquisaCidade(tipo){
 	var codigo;
@@ -120,7 +129,7 @@ function executaPesquisaCidade(tipo){
 	$('#cidade, #cidade-prof').empty().append("<option data-hidden='true'>Selecione uma cidade</option>");
 	$('#localiza-cidade').empty().append("<option data-hidden='true'>Selecione uma cidade</option>");
 	$.ajax({
-		url: 'SelectServlet',
+		url: '/pegapa/SelectServlet',
 		method: 'POST',
 		data: {carregaCidade:'carregaCidade', codigo:codigo},
 		success: function(data){
@@ -137,6 +146,45 @@ function executaPesquisaCidade(tipo){
 	
 }
 
+function executaPesquisaBairro(tipo){
+	var codigoCidade;
+	if(tipo == 'codigoCidadeLocaliza'){
+		codigoCidade = $( "#localiza-cidade option:selected" ).val();	
+	} else if(tipo == 'codigoCidadeProf'){
+		codigoCidade = $( "#cidade-prof option:selected" ).val();
+	} else if(tipo == 'codigoCidadeUser'){
+		codigoCidade = $( "#cidade-user option:selected" ).val();
+	}
+	
+	
+	var codigo;
+	if(codigoCidade != "Selecione uma cidade"){
+		codigo = codigoCidade;
+	} else{
+		return;
+	}
+	$("#bairros-user, #bairros-prof ,#localiza-bairros").empty().append("<option data-hidden='true'>Selecione um bairro</option>");
+	
+	$.ajax({
+		url: '/pegapa/SelectServlet',
+		method: 'POST',
+		data: {
+				carregaBairros:'carregaBairros', 
+				localizaCidade : codigo
+			},
+		success: function(data){
+			data = jQuery.parseJSON(data);
+			var options;
+			$.each(data, function(key, value){
+				options += '<option value="' + value.cod + '">' + value.nome + '</option>'
+				
+			});
+			$("#bairros-user, #bairros-prof ,#localiza-bairros").append(options);
+			$('.selectpicker').selectpicker('refresh');
+			
+		}
+	});
+}
 
 function submeterCadastroProfissional(){
 	var senha  = $("#senhaProfissional").val();
@@ -168,26 +216,23 @@ function submeterCadastroProfissional(){
 			return;
 		}
 		
+		$("#cidade").val($("#cidade option:selected").text());
+		$("#estado").val($("#estado option:selected").text());
+		var image;
+		$('#imagem').change(function(e){
+			image = new FormData();
+			image.append('imagem', e.target.files[0]);
+		})
+		var form = new FormData($('#formProfissional')[0]);
+		form.append('estado-prof', $("#estado-prof option:selected").text());
+		form.append('cidade-prof', $("#cidade-prof option:selected").text());
+		form.append('bairros-prof', $("#bairros-prof option:selected").text())
 		$.ajax({
 			
-			
 			url: "cadastrarProfissional",
-			data:  {
-				cadastra: "cadastra",
-				nome : $("#nomeProfissional").val(),
-				cpf	: $("#cpfProfissional").val(),
-				logradouro: $("#ruaProfissional").val(),
-				numero: $('#numeroProfissional').val(),
-				cidade: $('#cidade-prof  option:selected').text(),
-				estado: $("#estado-prof  option:selected").text(),
-				cep: $("#cepProfissional").val(),
-				telefone: telProf,
-				celular: celProf,
-				ocupacao: $("#ocupacao").val(),
-				experiencia: $("#experiencia").val(),
-				email: $("#emailProfissional").val(),
-				senhaProfissional: $("#senhaProfissional").val()
-			},
+			data: form,
+			processData : false,
+			contentType: false,
 			method: 'POST',
 			success :  function (data){
 				var result = $.parseJSON(data);
@@ -207,9 +252,7 @@ function submeterCadastroProfissional(){
 
 $("#login-profissional").on("click", function(event){
 
-	
 	var email = $('input[name="username-prof"]').val();
-	
 	
 	var senha = $('input[name="password-prof"]').val();
 	
@@ -219,12 +262,42 @@ $("#login-profissional").on("click", function(event){
 	if(senha == ""){
 		return;
 	}
-	
 })
 
 function autenticaProfissional(){
 	
 }
-function enviaSolicitacao(){
-	alert('teste');
+function enviaSolicitacao(idProf){
+	var descricaoSolic;
+	descricaoSolic = $('#' + idProf + 'txArea').val();
+	
+	if(descricaoSolic == ""){
+		alert('Descrição da solicitação não pode estar vazio.');
+		return;
+	}
+	
+	
+	$.ajax({
+		
+		url: "/pegapa/ServletUsuario",
+		data: {
+			solicitar : 'S',
+			id : idProf,
+			desc : descricaoSolic
+		},
+		method: 'POST',
+		success :  function (data){
+			var json = $.parseJSON(data);
+			
+			$('.modal-header').html(json.sucesso);
+			//var result = $.parseJSON
+		}
+	});
+}
+
+
+function visualizarSolicitacoes(idProf){
+
+	$("form[name='visuSolic']").submit();
+
 }

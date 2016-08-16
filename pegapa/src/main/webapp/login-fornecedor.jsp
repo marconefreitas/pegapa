@@ -19,7 +19,7 @@
 </head>
 <body>
 	<div class="container-fluid" >
-		<header class="row" >Header</header>
+		<header class="row header-page" ></header>
 		
 		<div class="row" >
 			<div role="main">	
@@ -51,8 +51,7 @@
 <!-- 				NAVIGATOR -->
 <!-- 			</nav> -->
 		</div>
-		<footer class="row">
-			footer
+		<footer class="row footer-page">
 		</footer>
 		
 		
