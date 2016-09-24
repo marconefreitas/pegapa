@@ -34,15 +34,20 @@
 		<div class="row" >
 				<div role="main">
 					<input type="hidden" value="${prof.id}" id="cod">
+					
 					<div class="container dynamicTile">
 					<div class="row" style="background-color: 000000;">
 						<a href="#" onclick="editarDadosProfissional();">
-							<div class="col-sm-4 col-xs-4">
-								<div id="tile1" class="tile">
-									<span>Editar Dados</span>
-									<div class="main-icon"><i class="glyphicon glyphicon-cog"></i> </div>
+							<form action="/pegapa/cadastrarProfissional" method="get" name="formEditProf">
+								<input type="hidden" value="S" name="editarProf"/>
+								<input type="hidden" value="${prof.id}" name="codProfissional">
+								<div class="col-sm-4 col-xs-4">
+									<div id="tile1" class="tile">
+										<span>Editar Dados</span>
+										<div class="main-icon"><i class="glyphicon glyphicon-cog"></i> </div>
+									</div>
 								</div>
-							</div>
+							</form>
 						</a>
 						<a href="#" onclick="visualizarSolicitacoes();">
 							<div class="col-sm-4 col-xs-4">
@@ -50,6 +55,26 @@
 									<div id="tile2" class="tile">
 										<input type="hidden" name="id" value="${prof.id}"/>
 										<span>Visualizar Solicitações</span>
+									</div>
+								</form>
+							</div>
+						</a>
+						<a href="#" onclick="historicoSolicitacao();">
+							<div class="col-sm-4 col-xs-4">
+								<form action="/pegapa/cadastrarProfissional?historicoSolic=S" name="historicoSolic" method="post" >
+									<div id="tile2" class="tile">
+										<input type="hidden" name="id" value="${prof.id}"/>
+										<span>Histórico de Solicitações</span>
+									</div>
+								</form>
+							</div>
+						</a>
+						<a href="#" onclick="listarServicos();">
+							<div class="col-sm-4 col-xs-4">
+								<form action="/pegapa/cadastrarProfissional?listarServicos=S" name="lServicos" method="post" >
+									<div id="tile2" class="tile">
+										<input type="hidden" name="id" value="${prof.id}"/>
+										<span>Portfólio de Serviços</span>
 									</div>
 								</form>
 							</div>

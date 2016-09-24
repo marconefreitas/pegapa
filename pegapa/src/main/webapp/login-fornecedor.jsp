@@ -67,7 +67,7 @@
 <!-- Javascripts da aplicação -->
 <script type="text/javascript" src="javascript/usuario.js" charset="utf-8"></script>
 <!-- <script type="text/javascript" src="javascript/profissional.js" charset="utf-8"></script> -->
-<script type="text/javascript" src="javascript/recursos.js" charset="utf-8"></script>
+<!-- <script type="text/javascript" src="javascript/recursos.js" charset="utf-8"></script> -->
 <script type="text/javascript" src="javascript/busca.js" charset="utf-8"></script>
 
 <script type="text/javascript">

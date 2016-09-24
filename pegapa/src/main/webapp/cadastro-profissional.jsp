@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-    pageEncoding="ISO-8859-1"%>
+    pageEncoding="utf-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 </head>
 <body>
@@ -16,7 +16,7 @@
 						Cadastro de Profissional
 					</div> 
 					<div class="modal-body">
-						<form role="form"  id="formProfissional" enctype="multipart/form-data" accept-charset="utf-8">
+						<form role="form"  id="formProfissional" enctype="multipart/form-data" accept-charset="iso-8859-1,utf-8">
 							<input type="hidden" name="cadastra" value="cadastra"/>
 							<div class="row">
 								<fieldset class="form-group">
@@ -35,6 +35,24 @@
 								</fieldset>
 							</div>
 							
+							
+							
+							<div class="row">
+								<div class="form-group col-md-8" style="padding: 0px 15px 0px 0px; background-color: #fff; border:none;">
+									<div class="input-group">
+										<span class="input-group-addon">CEP</span>
+										<input type="text" class="form-control" data-masc="cep" name="cep" id="cepProfissional" placeholder="CEP"/>
+									</div>
+								</div>
+							
+								<div class="form-group col-md-4" style="padding: 0px 0px 0px 15px; background-color: #fff; border:none;">
+									<div class="input-group">
+										<span class="input-group-addon">NÂº</span>
+										<input type="text" class="form-control" id="numeroProfissional" name="numero" placeholder=""/>
+									</div>
+								</div>
+							</div>
+							
 							<div class="row">
 								<fieldset class="form-group">
 									<div class="input-group">
@@ -43,24 +61,6 @@
 									</div>
 								</fieldset>
 							</div>
-							
-							<div class="row">
-								<div class="form-group col-md-4" style="padding: 0px 15px 0px 0px; background-color: #fff; border:none;">
-									<div class="input-group">
-										<span class="input-group-addon">Nº</span>
-										<input type="text" class="form-control" id="numeroProfissional" name="numero" placeholder=""/>
-									</div>
-								</div>
-								
-								<div class="form-group col-md-8" style="padding: 0px 0px 0px 15px; background-color: #fff; border:none;">
-									<div class="input-group">
-										<span class="input-group-addon">CEP</span>
-										<input type="text" class="form-control" data-masc="cep" name="cep" id="cepProfissional" placeholder="CEP"/>
-									</div>
-								</div>
-							
-							</div>
-							
 							
 							<div class="row">
 								<fieldset class="form-group">
@@ -105,7 +105,7 @@
 							<div class="row">
 								<fieldset class="form-group">
 									<select class="selectpicker" id="ocupacao" data-live-search="true" name="ocupacao" data-width="100%" >
-										<option data-hidden="true">Escolha uma Ocupação (Dentre as abaixo, qual você tem mais experiência?)</option>
+										<option data-hidden="true">Escolha uma OcupaÃ§Ã£o (Dentre as abaixo, qual vocÃª tem mais experiÃªncia?)</option>
 										<option value="pintor">Pintor</option>
 										<option value="pedreiro">Pedreiro</option>
 										<option value="marceneiro">Marceneiro</option>
@@ -118,7 +118,7 @@
 												
 							<!-- MODIFICAR PARA UM NUMERO REPRESENTANDO O ANO, E UM NUMERO REPRESENTANDO O MES DE EXPERIENCIA -->
 							<div class="row">
-								<fieldset id="exp" class="border-fieldset" style="padding:0px;"><legend>Experiência</legend>
+								<fieldset id="exp" class="border-fieldset" style="padding:0px;"><legend>ExperiÃªncia</legend>
 									<div class="form-group col-md-6" style="">
 										<div class="input-group">
 											<span class="input-group-addon">Meses</span>
@@ -170,7 +170,7 @@
 							<div class="row">
 								<fieldset class="form-group">
 									<div class="input-group">
-										<span class="input-group-addon">Confirmação</span>
+										<span class="input-group-addon">ConfirmaÃ§Ã£o</span>
 										<input type="password" class="form-control" id="confirmSenhaProfissional" name="confirmSenha" placeholder="Informa a senha novamente"/>
 									</div>
 								</fieldset>

@@ -29,13 +29,14 @@ import br.com.pegapa.entity.Bairro;
 import br.com.pegapa.entity.Cidade;
 import br.com.pegapa.entity.Comentario;
 import br.com.pegapa.entity.Estado;
+import br.com.pegapa.entity.Fornecedor;
 import br.com.pegapa.entity.Profissional;
+import br.com.pegapa.entity.Servico;
+import br.com.pegapa.repository.FornecedorRepository;
 import br.com.pegapa.repository.OutrosRepositorios;
 import br.com.pegapa.repository.ProfissionalRepositorio;
 
-/**
- * Servlet implementation class LocalizarServlet
- */
+
 @WebServlet("/LocalizarServlet")
 public class LocalizarServlet extends HttpServlet {
 	
@@ -47,20 +48,65 @@ public class LocalizarServlet extends HttpServlet {
 	@Inject
 	ProfissionalRepositorio profRepo;
 	
+	@Inject
+	FornecedorRepository fornRepo;
+	
     public LocalizarServlet() {
         super();
     }
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
+    	request.setCharacterEncoding("UTF-8");
     	if(request.getParameter("cod") != null){
 			selecionarProfissional(request, response);
 		} else if(request.getParameter("coment") != null){
 			recuperarComentario(request, response);
+		} else if(request.getParameter("servicos") != null){
+			recuperarServicos(request, response);
+		} else if(request.getParameter("all") != null){
+			recuperaProfissionalCompleto(request, response);
+		} else if(request.getParameter("allFornec") != null){
+			recuperaFornecedorCompleto(request, response);
 		}
     }
 
-    private void recuperarComentario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void recuperaFornecedorCompleto(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	Integer codigo = Integer.valueOf(request.getParameter("id"));
+		Fornecedor f = fornRepo.recuperaFornecedorCompleto(codigo);
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		String fornecedor = gson.toJson(f);
+		response.setContentType("application/json");
+		response.getWriter().write(fornecedor);		
+	}
+
+	private void recuperaProfissionalCompleto(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	Integer codigo = Integer.valueOf(request.getParameter("id"));
+    	Double nota = profRepo.recuperNotaDoProfisisonal(codigo);
+		Profissional p = profRepo.recuperaProfissionalCompleto(codigo);
+		p.setNota(nota);
+		System.out.println(p);
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		String profissional = gson.toJson(p);
+		response.setContentType("application/json");
+		response.getWriter().write(profissional);
+	}
+
+	private void recuperarServicos(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	Integer codigo = Integer.valueOf(request.getParameter("id"));
+    	Profissional p = new Profissional();
+		p.setId(codigo);
+    	List<Servico> servicos = repo.findAllServicosPorUsuario(p);
+    	//Json
+    	Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    	String lista = gson.toJson(servicos);
+    	System.out.println(lista);
+    	response.setContentType("application/json");
+    	response.getWriter().write(lista);
+		
+	}
+
+	private void recuperarComentario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	Integer codigo = Integer.valueOf(request.getParameter("id"));
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		Profissional p = new Profissional();
@@ -93,34 +139,82 @@ public class LocalizarServlet extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException {
+		//req.setCharacterEncoding("UTF-8");
 		if(req.getParameter("localizar") != null){
 			localizarProfissional(req, resp);
 		} else if(req.getParameter("img")!= null ){
 			recuperaFoto(req, resp);
+		} else if(req.getParameter("localizarFornecVirt")!= null ){
+			localizarFornecedorVirtual(req, resp);
 		}
 	}
 	
+	private void localizarFornecedorVirtual(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String ramoAtuacao = request.getParameter("ramoAtuacao").equals("Ramo de Atuação")  ? "" : request.getParameter("ramoAtuacao");	
+		List<Fornecedor> fornecedores = fornRepo.listarFornecedoresVirtuais(ramoAtuacao);
+		if(!fornecedores.isEmpty()){
+			for(Fornecedor f : fornecedores){
+				if(f.getFoto() != null){
+					InputStream baos = new ByteArrayInputStream(f.getFoto());
+					ImageIO.read(baos);
+					baos.close();
+					OutputStream o = new BufferedOutputStream(new FileOutputStream(getServletContext().getRealPath("") + "\\images\\filename"  + f.getCodFornecedor() + ".jpg"));
+					o.write(f.getFoto());
+					o.flush();
+					o.close();
+				}
+			}
+		}
+		request.getSession().setAttribute("lista", fornecedores);
+		response.sendRedirect("resultado-pesquisa-fornecedor-v.jsp");
+	}
+
 	public void localizarProfissional(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-		String estado = request.getParameter("localiza-estado") == "Selecione um estado" ? "" : request.getParameter("localiza-estado");
-		String cidade = request.getParameter("localiza-cidade") == "Selecione uma cidade"? "" : request.getParameter("localiza-cidade");
-		String bairro = request.getParameter("localiza-bairros");
+		Bairro bairroFromBD = new Bairro("");
+		Estado estadoFromBD = new Estado("");
+		Cidade cidadeFromBD = new Cidade("");
+		
+		String estado = request.getParameter("localiza-estado").equals("Selecione um Estado")  ? "" : request.getParameter("localiza-estado");
+		String cidade = request.getParameter("localiza-cidade").equals("Selecione uma Cidade") ? "" : request.getParameter("localiza-cidade");
+		String bairro = request.getParameter("localiza-bairros").equals("Selecione um Bairro") ? "" : request.getParameter("localiza-bairros");;
 		String categoria =  request.getParameter("categoria-buscada");
 		
 		List<Profissional> profissionais = new ArrayList<Profissional>();
-		Bairro bairroFromBD = repo.buscaBairroPorPk(Integer.valueOf(bairro));
-		Estado estadoFromBD = repo.buscaPorPK(Short.valueOf(estado));
-		Cidade cidadeFromBD = repo.buscaCidadePorPK(Integer.valueOf(cidade));
+		if(!estado.equals("")){
+			estadoFromBD = repo.buscaPorPK(Short.valueOf(estado));
+		}
+		if(!cidade.equals("")){
+			cidadeFromBD = repo.buscaCidadePorPK(Integer.valueOf(cidade));
+		}
 		
-		if(categoria.equals("t")){
-			//SELECIONA PROFISSIONAIS E FORNECEDORES
-			repo.localizarPessoas(estadoFromBD.getNome(), cidadeFromBD.getNome());
-		} else if(categoria.equals("p")){
-			//SELECT APENAS EM PROFISSIONAIS
+		if(!bairro.equals("")){
+			bairroFromBD = repo.buscaBairroPorPk(Integer.valueOf(bairro));	
+		}
+			
+		
+		if(categoria.equals("p")){
 			profissionais  = repo.localizarProfissionais(estadoFromBD.getNome(), cidadeFromBD.getNome(), bairroFromBD.getNome());
 
 		} else if(categoria.equals("f")){
+			List<Fornecedor> fornecedores = new ArrayList<>();
 			//SELECT APENAS EM FORNECEDORES
-			repo.localizarFornecedores(estado, cidade);
+			fornecedores = repo.localizarFornecedores(estadoFromBD.getNome(), cidadeFromBD.getNome(), bairroFromBD.getNome());
+			if(!fornecedores.isEmpty()){
+				for(Fornecedor f : fornecedores){
+					if(f.getFoto() != null){
+						InputStream baos = new ByteArrayInputStream(f.getFoto());
+						ImageIO.read(baos);
+						baos.close();
+						OutputStream o = new BufferedOutputStream(new FileOutputStream(getServletContext().getRealPath("") + "\\images\\filename"  + f.getCodFornecedor() + ".jpg"));
+						o.write(f.getFoto());
+						o.flush();
+						o.close();
+					}
+				}
+				request.getSession().setAttribute("lista", fornecedores);
+				response.sendRedirect("resultado-pesquisa-fornecedor-f.jsp");
+				return;
+			}
 		}
 
 		if(!profissionais.isEmpty()){

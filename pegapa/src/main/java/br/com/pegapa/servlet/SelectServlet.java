@@ -3,6 +3,7 @@ package br.com.pegapa.servlet;
 import java.io.IOException;
 import java.util.List;
 
+import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
@@ -26,6 +27,7 @@ import br.com.pegapa.repository.OutrosRepositorios;
 /**
  * Servlet implementation class SelectServlet
  */
+
 @WebServlet("/SelectServlet")
 public class SelectServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -38,6 +40,7 @@ public class SelectServlet extends HttpServlet {
     }
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setCharacterEncoding("UTF-8");
 		if(request.getParameter("carregaEstado") != null){
 			carregaEstado(request, response);
 		}
@@ -75,6 +78,7 @@ public class SelectServlet extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setCharacterEncoding("UTF-8");
 		if(request.getParameter("carregaEstado") != null){
 			carregaEstado(request, response);
 		} else if(request.getParameter("carregaCidade") != null){
@@ -87,6 +91,7 @@ public class SelectServlet extends HttpServlet {
 
 
 	public void carregaEstado(HttpServletRequest request, HttpServletResponse response){
+		
 		List<Estado> estados = outros.listaEstados();
 	
 		JSONArray array = new JSONArray();
@@ -101,7 +106,6 @@ public class SelectServlet extends HttpServlet {
 		}
 		
 		try {
-			
 			response.getWriter().write(array.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -109,22 +113,29 @@ public class SelectServlet extends HttpServlet {
 		
 	}
 	private void carregaCidade(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("Inicio : " + System.currentTimeMillis());
 		String codEstado = request.getParameter("codigo");
+		//List<Cidade> cidades = outros.listaCidades();
 		List<Cidade> cidades = outros.listaCidadesPorCodigoEstado(Short.valueOf(codEstado));
 		JSONArray array = new JSONArray();
 		for(Cidade city : cidades){
+			//if(codEstado.equals(city.getEstadoFk().getCodigo().toString())){
+				
 			JSONObject obj = new JSONObject();
 			
 			obj.put("nome", city.getNome());
 			obj.put("cod", city.getCodigo());
 			array.put(obj);
+			//}
 		}
 		try {
+			response.setCharacterEncoding("UTF-8");
 			response.getWriter().write(array.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+		System.out.println("Fim : " + System.currentTimeMillis());
 	}
+	
 
 }

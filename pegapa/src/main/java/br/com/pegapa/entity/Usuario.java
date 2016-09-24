@@ -38,7 +38,10 @@ public class Usuario {
 	public Usuario() {
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	public Usuario(Integer cod){
+		this.cod_user = cod;
+	}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -264,6 +267,11 @@ public class Usuario {
 
 
 
+	/*public String getTelFormatado(){
+		StringBuilder sb = new StringBuilder(this.telefone);
+		
+		
+	}*/
 	
 	
 }

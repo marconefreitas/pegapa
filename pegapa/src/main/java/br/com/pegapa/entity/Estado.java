@@ -28,7 +28,10 @@ public class Estado {
 	private List<Cidade> cidades;
 	
 	public Estado() {
-		// TODO Auto-generated constructor stub
+	}
+	
+	public Estado(String nome) {
+		this.nome = nome;
 	}
 
 	@Id
@@ -60,7 +63,7 @@ public class Estado {
 	}
 
 
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=Cidade.class, mappedBy="estadoFk")
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, targetEntity=Cidade.class, mappedBy="estadoFk")
 	public List<Cidade> getCidades() {
 		return cidades;
 	}

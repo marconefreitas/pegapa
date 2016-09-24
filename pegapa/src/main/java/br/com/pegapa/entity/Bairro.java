@@ -29,6 +29,13 @@ public class Bairro {
 	@JoinColumn(name="cod_cidade", nullable=false, foreignKey= @ForeignKey(value=ConstraintMode.CONSTRAINT, name="COD_CIDADE_FK"))
 	private Cidade cidadeFk;
 	
+	public Bairro() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Bairro(String nome) {
+		this.nome = nome;
+	}
 	
 	public Integer getCodigo() {
 		return codigo;

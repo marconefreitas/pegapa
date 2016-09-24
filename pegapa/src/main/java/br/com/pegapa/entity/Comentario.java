@@ -18,20 +18,26 @@ import com.google.gson.annotations.Expose;
 @Entity(name="comentario")
 public class Comentario {
 	
+
 	@Expose
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
 	
-	@Expose
+	//@Expose
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="id_solicitante", nullable=false,foreignKey = @ForeignKey(value=ConstraintMode.CONSTRAINT, name="COD_SOLICITANTE_FK"))
 	private Usuario usuarioFk;
 	
-	@Expose
+	//@Expose
 	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="id_profissional", nullable=false, foreignKey = @ForeignKey(value=ConstraintMode.CONSTRAINT, name="COD_PROFISSIONAL_FK"))
+	@JoinColumn(name="id_profissional", nullable=true, foreignKey = @ForeignKey(value=ConstraintMode.CONSTRAINT, name="COD_PROFISSIONAL_FK"))
 	private Profissional profissionalFk;
+	
+	//@Expose
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="id_fornecedor", nullable=true, foreignKey = @ForeignKey(value=ConstraintMode.CONSTRAINT, name="COD_FORNECEDOR_FK"))
+	private Fornecedor fornecedorFk;
 	
 	@Expose
 	@Column(name="nome_solicitante", nullable=false, length=50)
@@ -60,6 +66,12 @@ public class Comentario {
 	public void setProfissionalFk(Profissional profissionalFk) {
 		this.profissionalFk = profissionalFk;
 	}
+	public Fornecedor getFornecedorFk() {
+		return fornecedorFk;
+	}
+	public void setFornecedorFk(Fornecedor fornecedorFk) {
+		this.fornecedorFk = fornecedorFk;
+	}
 	public String getNomeSolicitante() {
 		return nomeSolicitante;
 	}
@@ -67,7 +79,12 @@ public class Comentario {
 		this.nomeSolicitante = nomeSolicitante;
 	}
 
-	
+	public String getDescricao() {
+		return descricao;
+	}
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
 	
 	
 }

@@ -3,6 +3,7 @@ package br.com.pegapa.repository;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
@@ -16,18 +17,22 @@ import br.com.pegapa.entity.Bairro;
 import br.com.pegapa.entity.Cidade;
 import br.com.pegapa.entity.Comentario;
 import br.com.pegapa.entity.Estado;
+import br.com.pegapa.entity.Fornecedor;
 import br.com.pegapa.entity.Profissional;
+import br.com.pegapa.entity.Servico;
 
+//@SessionScoped
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class OutrosRepositorios {
 
-
+	public OutrosRepositorios() {
+		System.out.println("NEW " + getClass().getName());
+	}
+	
 	@PersistenceContext
 	private EntityManager manager;
 
-	
-	
 	@SuppressWarnings("unchecked")
 	public List<Estado> listaEstados(){
 		String select = "select e from estado e";
@@ -38,6 +43,7 @@ public class OutrosRepositorios {
 	
 	@SuppressWarnings("unchecked")
 	public List<Cidade> listaCidadesPorCodigoEstado(Short codigo){
+		
 		String select = "select c from cidade c where c.estadoFk.codigo = :cod_estado";
 		List<Cidade> cidades = (List<Cidade>) this.manager.createQuery(select)
 				.setParameter("cod_estado", codigo)
@@ -46,6 +52,17 @@ public class OutrosRepositorios {
 		return cidades;
 	}
 
+	/*TODO TESTAR COM SINGLETON DEPOIS
+	public List<Cidade> listaCidades(){
+		if(this.cidades == null){
+			String select = "select c from cidade c";
+			this.cidades = (List<Cidade>) this.manager.createQuery(select)
+					.getResultList();
+
+		}
+
+		return this.cidades;
+	}*/
 	
 	public List<Cidade> listaCidades(Estado uf){
 		String select = "select c from cidade c where c.estadoFk = :cod_estado";
@@ -115,9 +132,42 @@ public class OutrosRepositorios {
 				.getResultList();
 	}
 
-	public List<Object> localizarFornecedores(String estado, String cidade) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Fornecedor> localizarFornecedores(String estado, String cidade, String bairro) {
+		Session session = (Session) this.manager.getDelegate();
+		Criteria consulta = session.createCriteria(Fornecedor.class);
+		if(! "".equals(estado)){
+			consulta.add(Restrictions.eq("estado", estado));
+		}
+		if(! "".equals(cidade)){
+			consulta.add(Restrictions.eq("cidade", cidade));
+		}
+		if(!"".equals(bairro)){
+			consulta.add(Restrictions.eq("bairro", bairro));
+		}
+		consulta.add(Restrictions.eq("tipoLoja", "Loja Fisica"));
+		
+		return (List<Fornecedor>)consulta.list();
+	}
+	public Servico findByPk(Integer id){
+		return this.manager.find(Servico.class, id);
 	}
 	
+	public List<Servico> findAllServicosPorUsuario(Profissional p){
+		return this.manager.createQuery("select s from servico s where s.profissional.id = :id", Servico.class)
+						.setParameter("id", p.getId())
+						.getResultList();
+	}
+	
+	public void inserirServico(Servico s){
+		this.manager.persist(s);
+	}
+	
+	public void alterar(Servico s){
+		this.manager.merge(s);
+	}
+	
+	public void deletar(Servico s){
+		s =	this.manager.merge(s);
+		this.manager.remove(s);
+	}
 }

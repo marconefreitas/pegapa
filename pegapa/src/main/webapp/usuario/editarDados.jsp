@@ -25,7 +25,7 @@
 		<header class="row header-page">
 			<!-- GAMBIARRA NA TAG FIGURE, RETIRAR DEPOIS -->
 			<figure style="float:left; padding-right:15px; top:1px; position:absolute;">
- 				<a href="paginaInicial.jsp"><img src="/pegapa/estilos/images/logo_pegapa.png" width="130px;" /></a>
+ 				<a href="/pegapa/usuario/paginaInicial.jsp"><img src="/pegapa/estilos/images/logo_pegapa.png" width="130px;" /></a>
 			</figure>
 			<div class="welcome" style="width: 82%; order:2">
 				<span class="glyphicon glyphicon-user" style="float: right; line-height: 33px;"></span>
@@ -44,10 +44,10 @@
 					</div>
 				</c:if>
 				<div class="container">
-					<div class="row" >
-						<form id="form-edit-user" action="../ServletUsuario" method="get">
+					<div class="col-md-8 col-md-offset-2" >
+						<form id="form-edit-user" action="/pegapa/ServletUsuario" method="get">
 							<input type="hidden" name="confEdicao" value="S">
-							<fieldset class="form-group" style="max-width: 65%;">
+							
 								<div class="input-group">
 									<span class="input-group-addon">Nome Completo</span>
 									<input type="hidden" name="codUser" value="${user.cod_user}"/>
@@ -94,10 +94,10 @@
 									<input type="text" class="form-control" name="cel" value="${user.celular}" />
 								</div>
 								
-							</fieldset>
-							<div class="row">
-								<button type="button" onclick=""class="btn btn-warning">Cancelar</button>
-								<button id="" type="submit" onclick="alterarDados();" class="btn btn-primary">Alterar</button>
+							
+							<div class="col-md-12" style="padding:15px 0px 15px 0px">
+								<button type="button" onclick="" style="float:left;" class="btn btn-warning">Cancelar</button>
+								<button id="" type="submit" style="float:right;" onclick="alterarDados();" class="btn btn-primary">Alterar</button>
 							</div>
 						</form>
 					</div>

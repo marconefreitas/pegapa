@@ -89,9 +89,9 @@ function buscar(){
 	var cidade;
 	var bairro;
 	var categoria;
-	estado = $( "#localiza-estado option:selected" ).val() == "Selecione um estado"? "" : $( "#localiza-estado option:selected" ).val();
-	cidade = $( "#localiza-cidade option:selected" ).val() == "Selecione uma cidade"? "": $( "#localiza-cidade option:selected" ).val(); 
-	bairro = $( "#localiza-bairros option:selected" ).val() == "Selecione um bairro"? "": $( "#localiza-bairros option:selected" ).val(); 
+	estado = $( "#localiza-estado option:selected" ).val() == "Selecione um Estado" ? "" : $( "#localiza-estado option:selected" ).val();
+	cidade = $( "#localiza-cidade option:selected" ).val() == "Selecione uma Cidade"? "": $( "#localiza-cidade option:selected" ).val(); 
+	bairro = $( "#localiza-bairros option:selected" ).val() == "Selecione um Bairro"? "": $( "#localiza-bairros option:selected" ).val(); 
 	categoria =  $( "#categoria-buscada option:selected" ).val();
 
 	$("form[name='localizar-profissional']").submit();
@@ -113,11 +113,12 @@ function selecionaProfissional(codigo){
 }
 function montaModal(data){
 	limpaModaisAntigas();
+	$('#msgSucesso').hide();
 	
-	var anosExp = data[0].profissionalFk.anosExperiencia;
-	var mesExp = data[0].profissionalFk.mesesExperiencia
+	var anosExp = data.anosExperiencia;
+	var mesExp = data.mesesExperiencia
 	
-	var experiencia = anosExp +  ' ano(s) e ' + mesExp + ' mês(es)';
+	var experiencia = anosExp +  ' ano(s) e ' + mesExp + ' mes(es)';
 	var src = data.photo;
 	var figure = $('<figure>').addClass('figure-prof')
 							  .append($('<img>').attr('src', data.photo));
@@ -125,56 +126,77 @@ function montaModal(data){
 	var textArea = $('<textarea>').addClass('form-control')
 								  .addClass('commentText')
 								  .addClass('pull-right')
-								  .attr('id', data[0].profissionalFk.id + 'txArea')
+								  .attr('id', data.id + 'txArea')
 								  .attr('placeholder' , 'Insira aqui uma pequena descrição da sua solicitação. Max : 200 caracteres')
 								  .attr('maxlength', '200');
 	
+	var servicosSelect = $('<select id="select' + data.id + '" style="width:55%; float:right">');
+	var servicosOptions = "<option selected value='0'>Escolha um Serviço</option>";
+	
+	if(data.servicos.length > 1){
+		$.each(data.servicos, function(index, value){
+			servicosOptions += '<option value="' + value.id + '">' + value.nome + '</option>'; 
+		});
+	} else if(data.servicos.length == 1){
+		servicosOptions += '<option value="' + data.servicos[0].id + '">' + data.servicos[0].nome + '</option>'
+	} else{
+		servicosOptions = "<option selected value='0'>Nenhum Serviço Cadastrado</option>";
+		$(servicosSelect).attr('disabled', 'disabled');
+	}
+	servicosSelect.append(servicosOptions);
 	var divConteudoModal =  $("<div>").addClass("conteudo-profissional")
-									  .append("Ocupação : " + data[0].profissionalFk.ocupacao + "<br/>")
-									  .append("Nivel de Experiência: <span name='exp' data-year='" + anosExp + "'" + " data-month='" + mesExp +  "'>" + experiencia + "</span><br/>")
-									  .append("Email: " + data[0].profissionalFk.email + "<br/>")
-									  .append("<address>")
-									  .append("Endereço : " + data[0].profissionalFk.logradouro + "<br/>")
-									  .append("CEP : " + data[0].profissionalFk.cep + "<br/>")
-									  .append("</address>")
+									  .append("<b>Ocupação : </b>" + data.ocupacao + "<br/>")
+									  .append("<b>Nivel de Experiência: </b><span name='exp' data-year='" + anosExp + "'" + " data-month='" + mesExp +  "'>" + experiencia + "</span><br/>")
+									  .append("<b>Email: </b>" + data.email + "<br/>")
+									  .append("<label style='line-height:27px;'> Serviços Cadastrados:</label>" )
+									  .append(servicosSelect)
+									  .append("<b>Bairro : </b>" + data.bairro + "<br/>")
+									  .append("<b>CEP :</b> " + data.cep + "<br/>")
+									  .append("<b>Avaliação no Sistema :</b>" + data.nota)
 									  .append("<hr/>")
-									  .append('Descrição :')
+									  .append('<b>Descrição :</b>')
 									  .append(textArea);
 	var divAntesComments;
-	if(data[0].descricao){
+	if(data.comentarios){
 		
 		var divAntesComments = $("<div>").addClass("clear")
 		.html('Comentários');
 		
-		$.each(data, function(i, item){
-			var div = $('<div>');
+		$.each(data.comentarios, function(i, item){
+			var div = $('<div>').css( {"padding-top": "5px", "overflow": 'hidden'});
 			var span = $("<span>").addClass('span-right')
 			.html(item.nomeSolicitante);
 			
 			var textArea = $('<textarea>').addClass('form-control')
 			.addClass('commentText')
 			.attr('disabled', 'disabled')
-			.css('height', '35px')
 			.html(item.descricao);
 			
 			divAntesComments.append(div.append(textArea).append(span));
 		});
 		
 	}
-	var divModalBody = $("<div>").addClass("modal-body").append(divConteudoModal)
+	
+	var fieldset = $('<fieldset>').addClass('form-group')
+	 .css("width", "68%")
+	 .css("float", "right")
+	 .append(divConteudoModal);
+	
+	
+	var divModalBody = $("<div>").addClass("modal-body").append(fieldset)
 														.append(figure)
 														.append(divAntesComments);
 	
 	var divBotaoEnviarSolicitacao = $("<div>").attr("id", "enviarSolicitacao")
 											  .addClass("btn-group btn-group-justified")
 											  .attr("role", "group")
-											  .append("<a href='#' class='btn btn-primary' role='button'>Enviar Solicitação</a>")
-											  .attr("onclick", "enviaSolicitacao(" + data[0].profissionalFk.id + ")");
+											  .append("<a href='#' class='btn orange' role='button'>Enviar Solicitação</a>")
+											  .attr("onclick", "enviaSolicitacao(" + data.id + ")");
 												
 	
 
 	
-	var divModalHeader = $("<div>").addClass("modal-header").css('background-color', '#8A2BE2').html('<span style="text-align:center"><b>' + data[0].profissionalFk.nome + '</span>');
+	var divModalHeader = $("<div>").addClass("modal-header").css('background-color', '#C0C0C0').html('<span style="text-align:center"><b>' + data.nome + '</span>');
 	
 	var divModalContent = $("<div>").addClass("modal-content")
 									.append(divModalHeader)
@@ -185,7 +207,7 @@ function montaModal(data){
 	var divModalDialog = $("<div>").addClass("modal-dialog")
 									.attr("id", "box-profissional")
 									.attr("role", "dialog")
-									.on('hidden', function(){$(this).remove();})
+									//.on('hidden', function(){$(this).remove();})
 									.append(divModalContent);
 	
 	
@@ -196,29 +218,46 @@ function montaModal(data){
 	divModalFade.modal("show");
 }
 
+$('#box').on("modal.bs.hidden", function(e){
+	$('.commentText').val("");
+});
+
 function montaModalProfissional(profissional, id){
-	var prof = $(profissional);
-
 	
-	var photo = $(profissional).find('#'+id).attr('src');
+	if($('#logged').val() == "sim"){
+		recuperaProfissionalCompleto(profissional);
+		
+		var servicos;
+		$('#msgSucesso').hide();
+		var photo = $(profissional).attr('src');
+		
+		$.ajax({
+			url: "LocalizarServlet",
+			dataType: 'json',
+			data: {
+				coment:'comentario',
+				id: $(profissional).attr('id')
+			},
+			method: 'POST',
+			beforeSend: function(){ 
+				buscaServicosPorProfissional($(profissional).attr('id')).done(function(data){
+					servicos = data;
+					console.log(servicos);
+				});
+					
+			},
+			success :  function (data){
+				console.log(data);
+				data.photo = photo;
+				data.servicos = servicos;
+				montaModal(data);
+			}
+		});
+		
+	} else{
+		$('#not-logged').modal();
+	}
 	
-	
-	$.ajax({
-		url: "LocalizarServlet",
-		dataType: 'json',
-		data: {
-			coment:'comentario',
-			id: $(profissional).find('.img-rounded').attr('id')
-		},
-		method: 'POST',
-		success :  function (data){
-			console.log(data);
-
-			data.photo = photo;
-			montaModal(data);
-//			console.log(data);
-		}
-	});
 	
 }
 
@@ -229,3 +268,40 @@ function limpaModaisAntigas(){
 		}
 	})
 }
+
+function buscaServicosPorProfissional(id){
+	var retorno;
+	return $.ajax({
+		url: "LocalizarServlet",
+		dataType: 'json',
+		data: {
+			servicos:'s',
+			id: id
+		},
+		method: 'POST',
+//		success :  function (data){
+//		}
+	});
+}
+
+
+function recuperaProfissionalCompleto(profissional){
+	var photo = $(profissional).attr('src');
+	
+	$.ajax({
+		url: "LocalizarServlet",
+		dataType: 'json',
+		data: {
+			all:'s',
+			id: $(profissional).attr('id')
+		},
+		method: 'POST',
+		success :  function (data){
+			data.photo = photo;
+			console.log(data);
+			montaModal(data);
+		}
+	});
+}
+
+

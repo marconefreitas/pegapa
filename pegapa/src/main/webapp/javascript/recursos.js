@@ -4,7 +4,24 @@
 
 
 
-
+$('#cepUsuario').on('blur', function(e){
+	e.preventDefault();
+	var url = 'http://cep.republicavirtual.com.br/web_cep.php?cep=';
+	var cep = $(this).val();
+	var formato = 'json';
+	
+	url = url + cep + '&formato=' + formato;
+	
+	$.ajax({
+		url: url,
+		method: 'POST',
+		success :  function (data){
+			console.log(data.resultado);
+			$('#ruaUsuario').removeAttr('disabled').val(data.logradouro);
+			$('#numeroUsuario').focus();
+		}
+	});
+});
 
 function testeJQuery(){
 	$.ajax({

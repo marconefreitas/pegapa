@@ -1,9 +1,15 @@
 @CHARSET "ISO-8859-1";
 
+textarea{
+	resize:none;
+}
+
+
+
 .container, .container-fluid{
 	padding-right: 15px;
 	padding-left: 15px;
-	background-color: #f9f9f9;
+	background-color: white;
 }
 
 .row{
@@ -11,14 +17,18 @@
 }
 
 .header-page{
-	background-image: url(../estilos/images/background1.png);
+/*	background-image: url(../estilos/images/background1.png);*/
 	background-repeat: repeat-x;
-	height: 73px;
+	height: 90px;
+	background-color: #FFA500;
 }
 .footer-page{
-	background-image: url(../estilos/images/background1.png);
+	/*background-image: url(../estilos/images/background1.png);
 	background-repeat: repeat-x;
-	height: 73px;
+	height: 73px;*/
+	background-color: #FFA500;
+	margin-bottom: 0;
+    min-height: 100px;
 }
 .logo{
 	background-image: url(../estilos/images/logo_pegapa.png);
@@ -36,9 +46,23 @@
 div[role="main"]{
 	background-color: #fff;
 }
-
+.search-box-professional{
+	background-color: #e0e0e0 ;
+	/*border: 3px solid white;*/
+	margin-bottom: 0
+}
+.lupe{
+	background-image:  url(/pegapa/estilos/images/loupe.png)
+}
 div[role="main"], nav, aside{
 /*	height: 400px;*/
+}
+.orange{
+	background-color:#FF7A01 ;
+	color:white;
+}
+.orange:hover{
+	background-color:#EB8305;
 }
 section[role="application"]{
 	margin-right: 0;
@@ -47,7 +71,9 @@ section[role="application"]{
 	/*float:left;*/
 	height:inherit;
 }
-
+.sub-section::after{
+	content: " ";
+}
 .container-inferior{
 	display: flex; 
 	flex-direction: row; 
@@ -104,29 +130,33 @@ section[role="application"]{
 
 /* RESULTADO PESQUISA  */
 .figure-prof{
-	float:right;
+	/*float:right;*/
 	width:30%;
 }
 .figure-prof img{
 	width : 100%;
 }
 .conteudo-profissional{
-	width: 68%;
-	float:left;
+	width: 100%;
 	line-height: 19px;
 }
 .clear{
 	clear: both;
+	overflow: auto;
+	max-height:230px;
 }
 .span-right{
 	float:right;
+	font-size: 10pt;
+    width: 20%;
 }
 .commentText{
 	margin-bottom: 5px; 
 	float:left; 
-	width: 80%;
+	width: 79%;
 	resize:none;
 	font-size:11px;
+	height:45px;
 }
 ::-webkit-input-placeholder {
    font-style: italic;
@@ -151,6 +181,10 @@ section[role="application"]{
 	font-size: 7em;
 	top:19%;
 }
+
+	/*background-image: url("../estilos/images/bground.png");*/
+	
+
 @media(max-width: 400px){
 	.main-icon i{
 		font-size: 4em;
@@ -184,4 +218,68 @@ section[role="application"]{
 }
 .image-preview-input-title {
     margin-left:2px;
+}
+
+/* VISUALIZAR SOLICITAÇÕES*/
+.recusar{
+	float: right; 
+	height: 4.13em; 
+	margin-top: 0; 
+	width: 70%;
+}
+.aceitar{
+	float: right; 
+	width: 70%; 
+	height: 4.13em;
+}
+.ender{
+	margin-bottom: 0;
+	font-size:85%;
+	width:50%;
+	float:left;
+}
+.container-main{
+	width:80%; 
+	margin: 0 auto 10px; 
+}
+.header-page::after{
+	content: " ";
+}
+.red{
+	color:red;
+}
+.green{
+	color:green;
+}
+.select-error{
+	float: left;
+    font-size: 90%;
+    font-weight: normal;
+    text-align: left;
+}
+.green-success{
+	/* CSS used here will be applied after bootstrap.css */
+    color:#fff;
+    padding:9px 15px;
+    border-bottom:1px solid #eee;
+    background-color: #5cb85c;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+}
+.red-success{
+	/* CSS used here will be applied after bootstrap.css */
+    color:#fff;
+    padding:9px 15px;
+    border-bottom:1px solid #eee;
+    background-color: #C9302C;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
 }

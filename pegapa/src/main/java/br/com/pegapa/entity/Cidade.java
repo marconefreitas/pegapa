@@ -26,6 +26,10 @@ public class Cidade {
 	public Cidade() {
 		// TODO Auto-generated constructor stub
 	}
+	public Cidade(String nome) {
+		this.nome = nome;
+	}
+	
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

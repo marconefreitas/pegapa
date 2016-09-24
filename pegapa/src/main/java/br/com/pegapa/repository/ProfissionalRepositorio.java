@@ -54,4 +54,22 @@ public class ProfissionalRepositorio {
 		return this.manager.find(Profissional.class, id);
 	}
 	
+	public Profissional recuperaProfissionalCompleto(Integer id){
+		return this.manager.createQuery("select p from profissional p "
+											   + "left join fetch p.servicos "
+											   + "left join fetch p.comentarios "
+											   + "where p.id =:id", Profissional.class)
+				.setParameter("id", id)
+				.getSingleResult();
+	}
+	
+	public Double recuperNotaDoProfisisonal(Integer id){
+		return this.manager.createQuery("select avg(s.avaliacao) from solicitacao s where s.profissional.id =:id", Double.class)
+				.setParameter("id", id)
+				.getSingleResult();
+	}
+	public Profissional merge(Profissional p){
+		return this.manager.merge(p);
+	}
+	
 }

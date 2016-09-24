@@ -2,14 +2,19 @@ package br.com.pegapa.entity;
 
 import javax.persistence.Embeddable;
 
+import com.google.gson.annotations.Expose;
+
 @Embeddable
 public class Endereco {
 	
 	
+	@Expose
 	private String rua;
 	
+	@Expose
 	private String numero;
 	
+	@Expose
 	private String cep;
 	
 	

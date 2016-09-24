@@ -16,27 +16,37 @@
 </head>
 <body>
 	<div class="container-fluid">
+	<input type="hidden" id="logged" value="${usuarioLogado}"/>
 		<header class="row header-page" >
 			<!-- GAMBIARRA NA TAG FIGURE, RETIRAR DEPOIS -->
 			<figure style="float:left; padding-right:15px; top:1px; position:absolute;">
  				<a href="usuario/paginaInicial.jsp"><img src="/pegapa/estilos/images/logo_pegapa.png" width="130px;" /></a>
 			</figure>
-			<div class="welcome" style="width: 82%; order:2">
-				<span class="glyphicon glyphicon-user" style="float: right; line-height: 33px;"></span>
-				<span style="float:right; height:100%; padding-right: 10px; line-height: 40px;">${user.nome}</span>
-			</div>
+			<c:if test="${not empty usuarioLogado}">
+				<div class="welcome" style="width: 90%; order:2">
+					<span class="glyphicon glyphicon-user" style="float: right; line-height: 33px;"></span>
+					<span style="float:right; height:100%; padding-right: 10px; line-height: 40px;">${user.nome}</span>
+				</div>
+			</c:if>
 		</header>
 		<div role="main" style="min-height:500px;">
-			<div class="row well well-sm" >    
-	        	<div class="col-md-3">
-	        	Filtrar por: 
+			<div id="msgSucesso" class="alert alert-success container-main alert-dismissable fade in" role="alert" style="display:none;">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    				<span aria-hidden="true">&times;</span>
+  				</button>
+				Solicitação Enviada com Sucesso
+			</div>
+			<div class="row well well-sm" >
+				<div class="col-md-12" style="text-align:left;">Filtros</div>    
+	        	<div class="col-md-3" style="text-align:left;">
 		        	<select class="selectpicker" id="filtros-select"> 
 						<option value="n" selected="true">Nenhum</option> 
 						<option value="o">Ocupação</option> 
 						<option value="e">Experiência</option> 
 					</select> 
-	        	</div>
-	        	<div class="col-md-3" id="filtros-ocupacao" style="display:none">
+				</div>
+	        	
+	        	<div class="col-md-3" id="filtros-ocupacao" style="display:none; text-align:left;">
 					<select id="ocup-select" class="selectpicker"  >
 						<option value="n" selected="true">Todas</option>
 						<c:forEach items="${lista}" var="item" varStatus="status">
@@ -45,23 +55,25 @@
 					</select>
 				</div>
 						
-				<div class="col-md-3" id="filtros-experiencia" style="display:none">
+				<div class="col-md-3" id="filtros-experiencia" style="display:none; text-align:left;">
 					<select id="exp-select" class="selectpicker"  >
 						<option value="n" selected="true">Todos</option>
 						<option value="1">Entre 0 e 3 anos</option>
 						<option value="2">Entre 3 e 5 anos</option>
 						<option value="3">Mais de 5 anos</option>
 					</select>
+				
 				</div>
-					
+				
 			</div>
 
 			<c:forEach items="${lista}" var="item" varStatus="status">
-				<div class="row profissional-box col-md-4 col-sm-6" onclick="montaModalProfissional(this, ${item.id})">
+				<div class="row profissional-box col-md-4 col-sm-6" >
 					<input type="hidden" value="${item.anosExperiencia}" id="ano"/>
 					<div style="float:left;">
-						<img src="LocalizarServlet?img=${item.id}" id="${item.id}" style="height: 175px;width: 156px;" class="img-rounded">
+						<img src="LocalizarServlet?img=${item.id}" id="${item.id}" onclick="recuperaProfissionalCompleto(this, ${item.id})" style="height: 175px;width: 156px; cursor:pointer;" class="img-rounded">
 					</div>
+					
 					<div style="text-align:left; float:left; padding-left:10px;">
 						<blockquote>
 							<p class="name">${item.nome}</p>
@@ -80,7 +92,15 @@
 		<footer class="row footer-page">
 		</footer>
 	</div>
-
+	<div class="modal fade" id="not-logged" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					PARA VERIFICAR MAIS DETALHES SOBRE O PROFISSIONAL, É NECESSÁRIO ESTAR LOGADO NO NOSSO SISTEMA
+				</div>
+			</div>
+		</div>
+	</div>
 
 <script type="text/javascript" src="javascript/jquery-2.2.3.js"></script>
 <script type="text/javascript" src="javascript/inputMask.js"></script>

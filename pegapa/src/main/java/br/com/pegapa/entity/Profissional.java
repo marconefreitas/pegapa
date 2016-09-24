@@ -1,21 +1,20 @@
 package br.com.pegapa.entity;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.JsonAdapter;
 
 @Entity(name="profissional")
 public class Profissional {
@@ -30,12 +29,10 @@ public class Profissional {
 	@Expose
 	private String nome;
 	
+	@Embedded
 	@Expose
-	private String logradouro;
-	
-	@Expose
-	private String numero;
-	
+	private Endereco endereco;
+
 	@Expose
 	private String cidade;
 	
@@ -45,9 +42,6 @@ public class Profissional {
 	@Expose
 	private String bairro;
 
-	@Expose
-	private String cep;
-	
 	@Expose
 	private String telefone;
 	
@@ -74,15 +68,20 @@ public class Profissional {
 	
 	private byte[] imagem;
 	
+	@Expose
+	@Transient
+	private Double nota;
 	
-	private List<Solicitacao> solicitacoes;
+	private Set<Solicitacao> solicitacoes;
 	
+	@Expose
+	private Set<Comentario> comentarios;
 	
-	private List<Comentario> comentarios;
-	
+	@Expose
+	private Set<Servico> servicos;
 	
 	public Profissional() {
-		// TODO Auto-generated constructor stub
+		
 	}
 	
 	public Profissional(Integer id){
@@ -114,22 +113,6 @@ public class Profissional {
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
-	
-	@Column(length=60, nullable=true, name="logradouro")
-	public String getLogradouro() {
-		return logradouro;
-	}
-	public void setLogradouro(String logradouro) {
-		this.logradouro = logradouro;
-	}
-	
-	@Column(length=8, nullable=true, name="numero")
-	public String getNumero() {
-		return numero;
-	}
-	public void setNumero(String numero) {
-		this.numero = numero;
-	}
 
 	@Column(name="cidade", length=90, nullable=false)
 	public String getCidade() {
@@ -145,14 +128,6 @@ public class Profissional {
 	}
 	public void setEstado(String estado) {
 		this.estado = estado;
-	}
-	
-	@Column(length=9, nullable=true, name="cep")
-	public String getCep() {
-		return cep;
-	}
-	public void setCep(String cep) {
-		this.cep = cep;
 	}
 	
 	@Column(length=13, nullable=true, name="telefone")
@@ -239,28 +214,52 @@ public class Profissional {
 	}
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, targetEntity=Solicitacao.class, mappedBy="profissional")
-	public List<Solicitacao> getSolicitacoes() {
+	public Set<Solicitacao> getSolicitacoes() {
 		return solicitacoes;
 	}
 
-	public void setSolicitacoes(List<Solicitacao> solicitacoes) {
+	public void setSolicitacoes(Set<Solicitacao> solicitacoes) {
 		this.solicitacoes = solicitacoes;
 	}
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="profissionalFk", targetEntity=Comentario.class)
-	public List<Comentario> getComentarios() {
+	public Set<Comentario> getComentarios() {
 		return comentarios;
 	}
 
-	public void setComentarios(List<Comentario> comentarios) {
+	public void setComentarios(Set<Comentario> comentarios) {
 		this.comentarios = comentarios;
+	}
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="profissional", targetEntity=Servico.class)
+	public Set<Servico> getServicos() {
+		return servicos;
+	}
+
+	public void setServicos(Set<Servico> servicos) {
+		this.servicos = servicos;
+	}
+
+	public Double getNota() {
+		return nota;
+	}
+
+	public void setNota(Double nota) {
+		this.nota = nota;
+	}
+
+	public Endereco getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
 	}
 
 	@Override
 	public String toString() {
 		return "Profissional [id=" + id + ", cpf=" + cpf + ", nome=" + nome
-				+ ", logradouro=" + logradouro + ", numero=" + numero
-				+ ", cidade=" + cidade + ", estado=" + estado + ", cep=" + cep
+				+ ", cidade=" + cidade + ", estado=" + estado 
 				+ ", telefone=" + telefone + ", celular=" + celular
 				+ ", email=" + email + ", senha=" + senha + ", nomeReferencia="
 				+ ", ocupacao=" + ocupacao + ", experiencia=" + experiencia

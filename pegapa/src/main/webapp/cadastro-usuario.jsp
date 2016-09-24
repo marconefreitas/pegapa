@@ -35,8 +35,8 @@
 							<div class="row">
 								<fieldset class="form-group">
 									<div class="input-group">
-										<span class="input-group-addon">Rua</span>
-										<input type="text" class="form-control" id="ruaUsuario" placeholder="Nome da sua Rua"/>
+										<span class="input-group-addon">Logradouro</span>
+										<input type="text" class="form-control" disabled id="ruaUsuario" />
 									</div>
 								</fieldset>
 							</div>
@@ -61,7 +61,7 @@
 							
 							<div class="row">
 								<fieldset class="form-group">
-									<select class="selectpicker" id="estado-user" data-live-search="true" id="estado" name="estado" data-width="100%" >
+									<select class="selectpicker" id="estado-user" data-live-search="true" name="estado" data-width="100%" >
 										<option data-hidden="true">Escolha um Estado</option>
 									</select>
 								</fieldset>

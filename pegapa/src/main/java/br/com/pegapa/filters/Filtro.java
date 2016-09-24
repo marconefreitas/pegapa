@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebFilter("/usuario/*")
+@WebFilter({"/usuario/*", "/profissional/*", "/fornecedor/*"})
 public class Filtro implements Filter {
 
 	@Override
@@ -27,14 +27,14 @@ public class Filtro implements Filter {
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest requisicao = (HttpServletRequest) request;
 		HttpServletResponse resposta = (HttpServletResponse) response;
-		
+		request.setCharacterEncoding("UTF-8");
 		HttpSession sessao = requisicao.getSession();
-		//chain.doFilter(request, response);
 		if(sessao.getAttribute("usuarioLogado") != null){
 			chain.doFilter(request, response);
 		} else{
 			resposta.sendRedirect("/pegapa/index.jsp");
 		}
+		
 		
 	}
 
