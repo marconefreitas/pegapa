@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -33,6 +34,7 @@ import br.com.pegapa.entity.Solicitacao;
 import br.com.pegapa.repository.OutrosRepositorios;
 import br.com.pegapa.repository.ProfissionalRepositorio;
 import br.com.pegapa.repository.SolicitacaoRepository;
+import br.com.pegapa.util.JavaMailUtil;
 
 
 @WebServlet("/cadastrarProfissional")
@@ -152,9 +154,10 @@ public class ProfissionalServlet  extends HttpServlet {
 		String stringPreco = req.getParameter("precoServ");
 		Double preco = null;
 		if(!"0,00".equals(stringPreco) && !stringPreco.isEmpty()){
-			//TODO se colocarem um preço muito alto, vai dar erro no replace abaixo Ex: "1.000.000,00 -> 1.000.000.00"
-			stringPreco = stringPreco.replace(',', '.');
-			preco = Double.valueOf(stringPreco);
+			stringPreco = stringPreco.replaceAll("[.,]", "");
+			StringBuilder sb = new StringBuilder(stringPreco);
+			sb.insert(sb.length() - 2, '.');
+			preco = Double.valueOf(sb.toString());
 		}
 		
 		Profissional p = (Profissional) req.getSession().getAttribute("prof");
@@ -233,20 +236,21 @@ public class ProfissionalServlet  extends HttpServlet {
 			byte [] dadosImagem = byteOut.toByteArray();
 			profissional.setImagem(dadosImagem);
 			profissional.setNome(req.getParameter("nome"));
-			profissional.setCpf(req.getParameter("cpf"));
+			profissional.setCpf(req.getParameter("cpf").replaceAll("[.-]", ""));
 			
 			Endereco end = new Endereco();
 			end.setRua(req.getParameter("endereco"));
 			end.setNumero(req.getParameter("numero"));
-			end.setCep(req.getParameter("cep"));
+			end.setCep(req.getParameter("cep").replaceAll("[-]", ""));
 			profissional.setEndereco(end);
+			profissional.setDescricaoProfissao(req.getParameter("descricao"));
 			profissional.setCidade(req.getParameter("cidade-prof"));
 			profissional.setEstado(req.getParameter("estado-prof"));
 			profissional.setMesesExperiencia(Byte.valueOf(req.getParameter("mes")));
 			profissional.setAnosExperiencia(Short.valueOf(req.getParameter("anos")));
 			profissional.setBairro(req.getParameter("bairros-prof"));
-			profissional.setTelefone(req.getParameter("telefone"));
-			profissional.setCelular(req.getParameter("celular"));
+			profissional.setTelefone(req.getParameter("telefone").replaceAll("[-)( ]", ""));
+			profissional.setCelular(req.getParameter("celular").replaceAll("[-)( ]", ""));
 			profissional.setOcupacao(req.getParameter("ocupacao"));
 			profissional.setExperiencia(req.getParameter("experiencia"));
 			profissional.setEmail(req.getParameter("email"));
@@ -286,6 +290,24 @@ public class ProfissionalServlet  extends HttpServlet {
 		
 		JSONObject json = new JSONObject();
 		json.put("sucesso", "Solicitação Confirmada.");
+		
+		//Enviar email pro usuario que o Profissional/fornecedor aceitou sua solicitacao
+		String nomeSolicitador = "";
+		if(aConfirmar.getFornecedor() != null){
+			nomeSolicitador = aConfirmar.getFornecedor().getNomeFantasia();
+		} else if(aConfirmar.getProfissional() != null){
+			nomeSolicitador = aConfirmar.getProfissional().getNome();
+		}
+		
+		String assunto = "Mudança de Status na sua Solicitação - PegaPá";
+		String texto = "Sua solicitação feita ao(a) " +  nomeSolicitador + " foi respondida. Entre no Pegapá e dê uma conferida.";
+		
+		/*
+		try {
+			JavaMailUtil.enviarEmail(aConfirmar.getUsuario().getEmail(), assunto, texto);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}*/
 		
 	}
 	
@@ -349,7 +371,8 @@ public class ProfissionalServlet  extends HttpServlet {
 		prof.setBairro(request.getParameter("bairros-prof"));
 		prof.setTelefone(request.getParameter("tel").replaceAll("[-)( ]", ""));
 		prof.setCelular(request.getParameter("cel").replaceAll("[-)( ]", ""));		
-
+		prof.setDescricaoProfissao(request.getParameter("descricao"));
+		prof.setOcupacao(request.getParameter("ocupacao"));
 		prof.getEndereco().setCep(request.getParameter("cep").replaceAll("[-]", ""));
 		prof.getEndereco().setNumero(request.getParameter("numero"));
 		prof.getEndereco().setRua(request.getParameter("rua"));

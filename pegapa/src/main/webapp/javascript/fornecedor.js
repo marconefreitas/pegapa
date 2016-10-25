@@ -23,10 +23,13 @@ function removePopoverDeErro(pop, elemento){
 	   .addClass('glyphicon glyphicon-thumbs-up')
 	   .addClass('green');
 
-	$(elemento).next().find('.popover').popover('disable');
-	$(elemento).next().find('.popover').remove();
+	pop.popover('hide');
+	pop.remove();
+	var i = $('<i>').addClass('glyphicon glyphicon-thumbs-up')
+	   		.addClass('green');
+	$(elemento).next().append(i);
 }
-$('#nomeFantasia').blur(function(){
+$('#nomeFantasia, #email').blur(function(){
 	var pop = $(this).closest('.input-group').find('i');
 
 	if($(this).val().length == 0){
@@ -38,7 +41,7 @@ $('#nomeFantasia').blur(function(){
 	$(this).attr('validated',true);
 })
 
-$('#nomeResp, #email, #rua, #numero ').blur(function(){
+$('#nomeResp, #rua, #numero ').blur(function(){
 	var pop = $(this).closest('.input-group').find('i');
 
 	if($(this).val().length == 0 & !isFornVirtual()){
@@ -49,6 +52,20 @@ $('#nomeResp, #email, #rua, #numero ').blur(function(){
 	removePopoverDeErro(pop, this);
 	$(this).attr('validated',true);
 })
+
+$('#descriptionForn').on( 'blur', function(){
+	var error = $(this).closest('.input-group').find('.red');
+
+	if($(this).val() == ''){
+		$(error).attr('hidden', false);
+		$(this).attr('validated',false);
+		return;
+	} else{
+		$(error).attr('hidden', true);
+	}
+	$(this).attr('validated',true);
+})
+
 
 $('#cnpjFornec').blur(function(){
 	var pop = $(this).closest('.input-group').find('i');
@@ -160,7 +177,7 @@ $("#ativa-cadastrar-fornecedor").click(function(){
 	
 });
 
-$('input[name="tipo"]').change(function(){
+$('input[name="tipo"]').click(function(){
 	$("#modal-cadastro-fornecedor .alert").hide();
 	if($(this).val() == "Loja Fisica"){
 		$('section[name="lojaVirtual"]').hide();
@@ -203,111 +220,159 @@ $('#cadastrarFornecedorFisico').click(function(e){
 	$("#modal-cadastro-fornecedor .alert").hide();
 	e.preventDefault();
 	//fazer as validações de fornecedor de loja fisica aqui
-	
-	var senha  = $("#senhaFornecedorFisico").val();
-	var confirmaSenha = $("#confirmSenhaFornecedorFisico").val();
-	if(senha != confirmaSenha){
-		alert("As senhas informadas não conferem.")
-		return;
-	} else{
-		
-		if($('#nomeFantasia').val() == ""){
-			alert("Nome Fantasia não pode ser vazio");
-			return;
-		}
-		if($('#cnpjForn').val() == ""){
-			alert("Cnpj nao pode ser vazio");
-			return;
-		}
-		
-		if($('#ramoAtuacao option:selected').val() == "None"){
-			alert('Escolha um ramo de atuação');
-			return;
-		}
-		
-		var tiraTudoQueNaoForDigito = /[^\d]+/g;
-		
-		var telForn = $("#telefoneFornecedor").val().replace(tiraTudoQueNaoForDigito, "");
-		var celForn = $("#celularFornecedor").val().replace(tiraTudoQueNaoForDigito, "");
-		var cep = $('#cepFornecedor').val().replace(tiraTudoQueNaoForDigito, "");
-		
-		var cnpj = $('#cnpjForn').val().replace(tiraTudoQueNaoForDigito, "");
-		
-		$('#cnpjForn').val(cnpj);
-		$("#telefoneFornecedor").val(telForn);
-		$("#celularFornecedor").val(celForn);
-		$("#cepFornecedor").val(cep);
 
-		if($("#estado-forn option:selected").text() == "Escolha um Estado"){
-			alert("Escolha um Estado");
-			return;
+	var validate = true;
+	$('#nomeFantasia, #cnpjForn, #descriptionProv, #respName, #cepFornecedor, #ruaFornecedor, #telefoneFornecedor, #celularFornecedor, #senhaFornecedorFisico, #confirmSenhaFornecedorFisico').each(function(){
+		$(this).blur();
+		if($(this).attr('validated') == "false"){
+			 validate = false;
+		 }
+	});
+	
+	$.ajax({
+		url: "/pegapa/ServletFornecedor",
+		async: false,
+		data:{
+			email: $('#emailFornecedor').val(),
+			validaEmail : 'S'
+		},
+		method: 'POST',
+		success :  function (data){
+			var pop = $('#emailFornecedor').closest('.input-group').find('i');
+			if(data == "true"){
+				$('#emailFornecedor').on('blur');
+				$('#emailFornecedor').attr('validated', true);
+				removePopoverDeErro(pop, $('#emailFornecedor'));
+			}
+			else{
+				validate = false;
+				criaPopoverDeErroComMsg(pop, 'Este e-mail já existe. Por favor, informe outro.');
+				$('#emailFornecedor').attr('validated', false);
+				$('#emailFornecedor').off('blur');
+			}
+			
 		}
-		
-		//TODO Acrescentar obrigatoriedade aqui embaixo
-		if($("#cidade-forn option:selected").text() == "Escolha uma Cidade"){
-			alert("Escolha uma Cidade");
-			return;
-		}
-		
-		
-		if($("#bairros-forn option:selected").text() == "Selecione um Bairro"){
-			alert("Selecione um Bairro");
-			return;
-		}
-		$('#ramoAtuacaoFisico').val($('#ramoAtuacaoFisico option:selected').val())
-		
-		var image;
-		$('#imagemFornFisico').change(function(e){
-			image = new FormData();
-			image.append('imagemFornFisico', e.target.files[0]);
-		})
-		
-		var form = new FormData($('#formFornecedor')[0]);
-		form.append('estadoForn', $("#estado-forn option:selected").text());
-		form.append('cidadeForn', $("#cidade-forn option:selected").text());
-		form.append('bairrosForn', $("#bairros-forn option:selected").text());
-		submeterCadastroFornecedor(form);
+	});
+	
+	
+	var atuacaoPValidar = $('button[data-id="ramoAtuacaoFisico"]').blur();
+	if($(atuacaoPValidar).attr('validated') == "false"){
+		validate = false;
 	}
+	
+	var estadoPValidar = $('button[data-id="estado-forn"]').blur();
+	if($(estadoPValidar).attr('validated') == "false"){
+		validate = false;
+	}
+	
+	var cidadePValidar = $('button[data-id="cidade-forn"]').blur();
+	if($(cidadePValidar).attr('validated') == "false"){
+		validate = false;
+	}
+	
+	var bairroPValidar = $('button[data-id="bairros-forn"]').blur();
+	if($(bairroPValidar).attr('validated') == "false"){
+		validate = false;
+	}
+	
+	if($('.image-preview-filename').val() == ""){
+		$('#label-erro-foto-prov-f').show();
+		return;
+	}
+	if(!validate){
+		return;
+	}
+	
+	var tiraTudoQueNaoForDigito = /[^\d]+/g;
+
+	var telForn = $("#telefoneFornecedor").val().replace(tiraTudoQueNaoForDigito, "");
+	var celForn = $("#celularFornecedor").val().replace(tiraTudoQueNaoForDigito, "");
+	var cep = $('#cepFornecedor').val().replace(tiraTudoQueNaoForDigito, "");
+
+	var cnpj = $('#cnpjForn').val().replace(tiraTudoQueNaoForDigito, "");
+
+	$('#cnpjForn').val(cnpj);
+	$("#telefoneFornecedor").val(telForn);
+	$("#celularFornecedor").val(celForn);
+	$("#cepFornecedor").val(cep);
+
+	var image;
+	$('#imagemFornFisico').change(function(e){
+		image = new FormData();
+		image.append('imagemFornFisico', e.target.files[0]);
+	})
+
+	var form = new FormData($('#formFornecedor')[0]);
+	form.append('estadoForn', $("#estado-forn option:selected").text());
+	form.append('cidadeForn', $("#cidade-forn option:selected").text());
+	form.append('bairrosForn', $("#bairros-forn option:selected").text());
+	submeterCadastroFornecedor(form);
+
 });
 
 $('#cadastrarFornecedorVirtual').click(function(e){
 	$("#modal-cadastro-fornecedor .alert").hide();
 	e.preventDefault();
-	//fazer as validações de fornecedor de loja fisica aqui
+	//fazer as validações de fornecedor de loja VIRTUAL aqui
 	
-	var senha  = $("#senhaFornecedorVirt").val();
-	var confirmaSenha = $("#confirmSenhaFornVirt").val();
-	if(senha != confirmaSenha){
-		alert("As senhas informadas não conferem.")
-		return;
-	} else{
-		
-		if($('#nomeFantasiaVirt').val() == ""){
-			alert("Nome Fantasia não pode ser vazio");
-			return;
-		}
-		
-		if($('#urlVirt').val() == ""){
-			alert('URL não pode ser vazia');
-			return;
-		}
-		if($('#ramoAtuacaoVirt option:selected').val() == "None"){
-			alert('Escolha um ramo de atuação');
-			return;
-		}
-		
-		//var tiraTudoQueNaoForDigito = /[^\d]+/g;
-		
-		$('#ramoAtuacaoVirtual').val($('#ramoAtuacaoVirtual option:selected').val())
-		
-		var image;
-		$('#imagemFornVirtual').change(function(e){
-			image = new FormData();
-			image.append('imagemFornVirtual', e.target.files[0]);
-		})
-		var form = new FormData($('#formFornecedor')[0]);
-		submeterCadastroFornecedor(form);
+	var validate = true;
+	$('#nomeFantasiaVirt, #urlVirt, #descriptionProvVirt, #emailFornecedorVirt, #senhaFornecedorVirt, #confirmSenhaFornVirt').each(function(){
+		$(this).blur();
+		if($(this).attr('validated') == "false"){
+			 validate = false;
+		 }
+	});
+	
+	var atuacaoPValidar = $('button[data-id="ramoAtuacaoVirt"]').blur();
+	if($(atuacaoPValidar).attr('validated') == "false"){
+		validate = false;
 	}
+	
+	if($('#provVirt').val() == ""){
+		$('#label-erro-foto-virt').show();
+		return;
+	}else{
+		$('#label-erro-foto-virt').hide();
+	}
+	
+	$.ajax({
+		url: "/pegapa/ServletFornecedor",
+		async: false,
+		data:{
+			email: $('#emailFornecedorVirt').val(),
+			validaEmail : 'S'
+		},
+		method: 'POST',
+		success :  function (data){
+			var pop = $('#emailFornecedorVirt').closest('.input-group').find('i');
+			if(data == "true"){
+				$('#emailFornecedorVirt').on('blur');
+				$('#emailFornecedorVirt').attr('validated', true);
+				removePopoverDeErro(pop, $('#emailFornecedor'));
+			}
+			else{
+				validate = false;
+				criaPopoverDeErroComMsg(pop, 'Este e-mail já existe. Por favor, informe outro.');
+				$('#emailFornecedorVirt').attr('validated', false);
+				$('#emailFornecedorVirt').off('blur');
+			}
+			
+		}
+	});
+	if(!validate){
+		return;
+	}
+
+	$('#ramoAtuacaoVirtual').val($('#ramoAtuacaoVirtual option:selected').val())
+
+	var image;
+	$('#imagemFornVirtual').change(function(e){
+		image = new FormData();
+		image.append('imagemFornVirtual', e.target.files[0]);
+	})
+	var form = new FormData($('#formFornecedor')[0]);
+	submeterCadastroFornecedor(form);
+
 });
 
 
@@ -326,7 +391,6 @@ function submeterCadastroFornecedor(form){
 				console.log("sucesso");
 				$("#modal-cadastro-fornecedor .alert").removeClass('alert-danger');
 				$("#modal-cadastro-fornecedor .alert").addClass("alert-success").text(result.sucesso).css("display", "block");
-				//cancelaTudo('modal-cadastro-profissional');
 			} else if(result.erro){
 				console.log("erro");
 				$("#modal-cadastro-fornecedor .alert").removeClass('alert-success');
@@ -384,7 +448,7 @@ function editarFornecedor(){
 function alterarDadosFornecedor(){
 
 	var validate = true;
-	$('#nomeFantasia, #cnpjFornec, #nomeResp, #cep, #rua, #numero, #url, #telForn, #celForn, #email').each(function(){
+	$('#nomeFantasia, #cnpjFornec, #nomeResp, #cep, #rua, #numero, #url, #telForn, #celForn, #email, #descriptionForn').each(function(){
 		$(this).blur();
 		if($(this).attr('validated') == "false"){
 			 validate = false;
@@ -426,16 +490,16 @@ function alterarDadosFornecedor(){
 	var ramoAtuacao = $('#ramoAtuacaoFisico option:selected').text();
 	var estado = $("#editar-estado-forn option:selected").text();
 	var cidade =  $("#editar-cidade-forn option:selected").text();
+	
 	var bairro =  $("#editar-bairros-forn option:selected").text();
 	$("#editar-estado-forn option:selected").val(estado);
-	$("#editar-cidade-forn option:selected").val(cidade);
+	$("#editar-cidade-forn option:selected").val(cidade); 
 	$("#editar-bairros-forn option:selected").val(bairro);
 	$('#ramoAtuacaoFisico option:selected').val(ramoAtuacao);
 	
 	if( $('#imagemFornecedor').val() == ""){
 		 $('#imagemFornecedor').remove();
 	}
-	alert('submit Ok');
 	$('#form-edit-user').submit();
 }
 
@@ -481,17 +545,17 @@ function alterarDadosFornecedorVirtual(){
 
 function recuperaFornecedorLojaFisica(fornecedorFoto, id){
 	if($('#logged').val() == "sim"){
-		var photo = $(fornecedorFoto).attr('src');
+		var photo = $(fornecedorFoto).find('img[name="photo"]');
 		$.ajax({
 			url: "LocalizarServlet",
 			dataType: 'json',
 			data: {
 				allFornec:'s',
-				id: $(fornecedorFoto).attr('id')
+				id: $(photo).attr('id')
 			},
 			method: 'POST',
 			success :  function (data){
-				data.photo = photo;
+				data.photo = $(photo).attr('src');
 				console.log(data);
 				montaModalFornecedorFisico(data);
 			}
@@ -505,8 +569,15 @@ function recuperaFornecedorLojaFisica(fornecedorFoto, id){
 function montaModalFornecedorFisico(data){
 	limpaModaisAntigas();
 	var figure = $('<figure>').addClass('figure-prof')
-	  .append($('<img>').attr('src', data.photo));
+	  .append($('<img>').attr('src', data.photo).css('height', '215px'));
 
+	
+	var cabecalhoTextArea = $('<div>').addClass('label-textarea')
+	  .html("Descrição da sua solicitação:");
+
+	
+	
+	
 	var textArea = $('<textarea>').addClass('form-control')
 		  .addClass('commentText')
 		  .addClass('pull-right')
@@ -514,21 +585,47 @@ function montaModalFornecedorFisico(data){
 		  .attr('placeholder' , 'Insira aqui uma pequena descrição da sua solicitação. Max : 200 caracteres')
 		  .attr('maxlength', '200');
 	
+	var descricaoProfissional = $('<div>').addClass('input-group')
+	  .addClass('input-custom-group')
+	  .append(cabecalhoTextArea)
+	  .append(textArea);
+	
 	if(data.url == undefined){
 		data.url = "Não informado";
 	}
+	
+	var abreTagLabel = "<label style='font-weight:normal;'>";
+	var fechaTagLabel = "</label>";
+
+	var notaProfissional  = "Não Definida";
+	if(data.avaliacao){
+		notaProfissional = data.avaliacao;
+	}
+	
 	var divConteudoModal =  $("<div>").addClass("conteudo-profissional")
-	  .append("<b>Email: </b>" + data.email + "<br/>")
-	  .append("<b>Bairro : </b>" + data.bairro + "<br/>")
-	  .append("<b>CEP :</b> " + data.endereco.cep + "<br/>")
-	  .append("<b>Endereço Web :</b> " + data.url + "<br/>")
-	  .append("<hr/>")
-	  .append('<b>Descrição :</b>')
-	  .append(textArea);
+									  .css('float', 'left')
+									  .append("<label for='mail'>Email:</label> <br/>")
+									  .append("<label>Bairro:</label><br/>")
+									  .append("<label>CEP: </label><br/>")
+									  .append("<label>Endereço WEB: </label> <br/>")
+									  .append("<label>Avaliação no Sistema: </label> <br/>")
+									  .append("<hr/>");
+	
+	var divConteudoModal1 = $("<div>").css('float', 'left')
+				.append('<label id="mail" style="font-weight:normal;">' + data.email + fechaTagLabel)
+				.append('</br>')
+				.append(abreTagLabel + data.bairro + fechaTagLabel)
+				.append('</br>')
+				.append(abreTagLabel + data.endereco.cep + fechaTagLabel)
+				.append('</br>')
+				.append(abreTagLabel + data.url + fechaTagLabel)
+				.append('</br>')
+				.append(abreTagLabel + notaProfissional + fechaTagLabel);
 	
 	
-	var divAntesComments;
-	if(data.comentarios){
+	
+	var divAntesComments = "";
+	if(data.comentarios.length > 0){
 		
 		var divAntesComments = $("<div>").addClass("clear")
 		.html('Comentários');
@@ -549,14 +646,29 @@ function montaModalFornecedorFisico(data){
 	}
 	
 	
+	/* ------------------------ INICIO BLOCKQUOTE ------------------------ */
+	var blockquote = $('<pre>').css("white-space", "normal")
+							   .css('min-height', '175px')
+							   .html(data.descricaoServicosPrestados);
+	
+	
+	
+	
+	
+	/* ------------------------ FIM BLOCKQUOTE ------------------------ */
+	
 	var fieldset = $('<fieldset>').addClass('form-group')
 	 .css("width", "68%")
 	 .css("float", "right")
-	 .append(divConteudoModal);
+	 .append(blockquote)
+	 .append(divConteudoModal)
+	 .append(divConteudoModal1);
 	
 	
 	var divModalBody = $("<div>").addClass("modal-body").append(fieldset)
+	.append(fieldset)
 	.append(figure)
+	.append(descricaoProfissional)
 	.append(divAntesComments);
 	
 	var divBotaoEnviarSolicitacao = $("<div>").attr("id", "enviarSolicitacao")
@@ -577,6 +689,7 @@ function montaModalFornecedorFisico(data){
 	var divModalDialog = $("<div>").addClass("modal-dialog")
 	.attr("id", "box-profissional")
 	.attr("role", "dialog")
+	.css("width", "60%")
 //	.on('hidden', function(){$(this).remove();})
 	.append(divModalContent);
 
@@ -587,10 +700,12 @@ function montaModalFornecedorFisico(data){
 	.append(divModalDialog);
 	divModalFade.modal("show");
 }
+
+
 function montaModalFornecedorVirtual(data){
 	limpaModaisAntigas();
 	var figure = $('<figure>').addClass('figure-prof')
-	  .append($('<img>').attr('src', data.photo));
+	  .append($('<img>').attr('src', data.photo).css('height', '215px'));
 
 	var textArea = $('<textarea>').addClass('form-control')
 		  .addClass('commentText')
@@ -598,17 +713,44 @@ function montaModalFornecedorVirtual(data){
 		  .attr('id', data.codFornecedor + 'txArea')
 		  .attr('placeholder' , 'Insira aqui uma pequena descrição da sua solicitação. Max : 200 caracteres')
 		  .attr('maxlength', '200');
+	var cabecalhoTextArea = $('<div>').addClass('label-textarea')
+	  .html("Descrição da sua solicitação:");
 	
+	var descricaoProfissional = $('<div>').addClass('input-group')
+												.addClass('input-custom-group')
+												.append(cabecalhoTextArea)
+												.append(textArea);
+	
+	
+	/* ------------   MONTA AS DUAS DIVS QUE MOSTRAM AS INFORMAÇÕES DOS PROFISSIONAIS -------------*/
+	var notaProfissional  = "Não Definida";
+	if(data.avaliacao != undefined){
+		notaProfissional = data.avaliacao;
+	}
+	
+	var abreTagLabel = "<label style='font-weight:normal;'>";
+	var fechaTagLabel = "</label>";
 	
 	var divConteudoModal =  $("<div>").addClass("conteudo-profissional")
-	  .append("<b>Email: </b>" + data.email + "<br/>")
-	  .append("<b>Endereço Web :</b> " + data.url + "<br/>")
-	  .append("<hr/>")
-	  .append('<b>Descrição :</b>')
-	  .append(textArea);
+										.css('float', 'left')  
+										.append("<label for='mail'>Email: </label><br/>")
+										.append("<label>Endereço Web :</label> <br/>")
+										.append("<label>Avaliação no Sistema :</label>")
+										.append("<hr/>")
+										
 	
+	var divConteudoModal1 = $("<div>").css('float', 'left')
+	.append('<label id="mail" style="font-weight:normal;" >' + data.email + fechaTagLabel)
+	.append('</br>')
+	.append(abreTagLabel + data.url + fechaTagLabel)
+	.append('</br>')
+	.append(abreTagLabel + notaProfissional + fechaTagLabel)
+	.append('</br>')
+	
+
+	/* ---------------------------------------------------   FIM  ---------------------------------------------------------*/
 	var divAntesComments;
-	if(data.comentarios){
+	if(data.comentarios.length > 0){
 		
 		var divAntesComments = $("<div>").addClass("clear")
 		.html('Comentários');
@@ -628,15 +770,33 @@ function montaModalFornecedorVirtual(data){
 		
 	}
 	
+	
+	
+	
+	/* ------------------------ INICIO BLOCKQUOTE ------------------------ */
+	var blockquote = $('<pre>').css("white-space", "normal")
+							   .css('min-height', '175px')
+							   .html(data.descricaoServicosPrestados);
+	
+	
+	
+	
+	
+	/* ------------------------ FIM BLOCKQUOTE ------------------------ */
+	
+	
 	var fieldset = $('<fieldset>').addClass('form-group')
-	 .css("width", "68%")
-	 .css("float", "right")
-	 .append(divConteudoModal);
+	 								.css("width", "68%")
+	 								.css("float", "right")
+	 								.append(blockquote)
+	 								.append(divConteudoModal)
+									.append(divConteudoModal1);
 	
-	
-	var divModalBody = $("<div>").addClass("modal-body").append(fieldset)
-	.append(figure)
-	.append(divAntesComments);
+	var divModalBody = $("<div>").addClass("modal-body")
+									.append(fieldset)
+									.append(figure)
+									.append(descricaoProfissional)
+									.append(divAntesComments);
 	
 	var divBotaoEnviarSolicitacao = $("<div>").attr("id", "enviarSolicitacao")
 	.addClass("btn-group btn-group-justified")
@@ -656,6 +816,7 @@ function montaModalFornecedorVirtual(data){
 	var divModalDialog = $("<div>").addClass("modal-dialog")
 	.attr("id", "box-profissional")
 	.attr("role", "dialog")
+	.css("width", "60%")
 //	.on('hidden', function(){$(this).remove();})
 	.append(divModalContent);
 
@@ -674,7 +835,7 @@ function enviaSolicitacaoFornecedorFisico(cod){
 
 	
 	if(descricaoSolic == ""){
-		alert('Descrição da solicitação não pode estar vazio.');
+		alert('Descrição da solicitação é obrigatorio.');
 		return;
 	}
 	
@@ -685,7 +846,8 @@ function enviaSolicitacaoFornecedorFisico(cod){
 			solicitar : 'S',
 			id : cod,
 			desc : descricaoSolic,
-			nomeServico: 'VAZIO'
+			nomeServico: 'VAZIO',
+			email: $('#mail').text()
 		},
 		method: 'POST',
 		success :  function (data){
@@ -704,17 +866,17 @@ function visualizarSolicitacoesPerfilFornecedor(){
 
 function recuperaFornecedorLojaVirtual(fornecedorFoto){
 	if($('#logged').val() == "sim"){
-		var photo = $(fornecedorFoto).attr('src');
+		var photo = $(fornecedorFoto).find('img[name="photo"]');
 		$.ajax({
 			url: "LocalizarServlet",
 			dataType: 'json',
 			data: {
 				allFornec:'s',
-				id: $(fornecedorFoto).attr('id')
+				id: $(photo).attr('id')
 			},
 			method: 'POST',
 			success :  function (data){
-				data.photo = photo;
+				data.photo = $(photo).attr('src');
 				console.log(data);
 				montaModalFornecedorVirtual(data);
 			}

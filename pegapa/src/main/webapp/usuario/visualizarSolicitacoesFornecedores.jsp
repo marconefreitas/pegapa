@@ -7,6 +7,7 @@
 
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="/pegapa/icopegapa.png" >
 	<!-- Bootstrap -->
 	<link href="/pegapa/css/bootstrap.min.css" rel="stylesheet">
 	<link href="/pegapa/css/style.css" rel="stylesheet">
@@ -25,15 +26,19 @@
 		<header class="row header-page" style="display:flex;" >
 			<!-- GAMBIARRA NA TAG FIGURE, RETIRAR DEPOIS -->
 			<figure style="float:left; padding-right:15px; order:1; position: relative; top: -17px;">
- 				<a href="paginaInicial.jsp"><img src="/pegapa/estilos/images/logo_pegapa.png" width="130px;" /></a>
+ 				<a href="paginaInicial.jsp"><img src="/pegapa/estilos/images/backlogo.jpg" class="img-logo" /></a>
 			</figure>
 			<div class="welcome" style="width: 82%; order:2">
-				<span class="glyphicon glyphicon-user" style="float: right; line-height: 33px;"></span>
+				<span class="glyphicon glyphicon-user" style="float: right; line-height: 33px; padding-right: 10px;" title="${user.nome}"></span>
 				<span style="float:right; height:100%; padding-right: 10px; line-height: 40px;">${user.nome}</span>
 			</div>
 		</header>
 	
 		<div role="main">
+		<nav class="breadcrumb">
+			<a class="breadcrumb-item" href="/pegapa/usuario/paginaInicial.jsp">Página Inicial</a> /
+  			<span class="breadcrumb-item active">Visualização de Solicitações de Fornecedores</span>
+		</nav>
 		<form action="/pegapa/ServletUsuario" method="post" name="visualizarSolicForn">
 			<input type="hidden" value="${user.cod_user}" name="codUser">
 			<input type="hidden" value="S" name="visualizForn"/>
@@ -87,8 +92,11 @@
 						</div>
 						
 						<div class="media-body" style="text-align:left; height:75px">
-							<div style="width:60%; overflow: hidden; float:left; margin-bottom:15px ">
+							<div style="width:60%; float:left; margin-bottom:15px ">
 								<h4 class="media-heading">${item.fornecedor.nomeFantasia }</h4>
+								<c:if test="${item.situacao eq 'CONFIRMADO'}">
+									<span><i class="glyphicon glyphicon-earphone"> ${item.fornecedor.tel1}</i></span>
+								</c:if>
 							</div>
 							<small style="float:right;"><i style="font-style:italic; color: gray;">Solicitado em: ${item.dtFormatada }</i></small><br/>
 							<small style="float:right;" ><i style="font-style:italic; color: gray;" data-name="statusSolic"> ${item.situacaoEDataModificacaoFormatada }</i></small>

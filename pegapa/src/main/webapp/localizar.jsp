@@ -2,30 +2,30 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<!-- Bootstrap select -->
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
-
-</head>
+<!-- <head> -->
+<!-- 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> -->
+<!-- 	<!-- Bootstrap select --> -->
+<!-- 	<link rel="stylesheet" href="/pegapa/estilos/bootstrap-select.min.css" /> -->
+<!-- 	<link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> -->
+<!-- </head> -->
 <body>
 	<div class="sub-section container-fluid" style="background-color: #ffa500;">
 					
 						
-						<div class="row" >
-							<span style="font-family: Tahoma; font-size:1.875em; color:white; ">Encontre o profissional ou fornecedor adequado para você:</span>
+						<div class="row" style="padding-left:15px;">
+							<span style="font-family: Tahoma; font-size:1.875em; color:white;" >Encontre o profissional ou fornecedor adequado para você:</span>
 						</div>
 						<div class="row">
 								
-							<label for="tipo" class="control-label input-group" style="margin-left:15px;">Estou Buscando</label>
+							<label for="tipo" class="control-label input-group" style="margin-left:15px; color:white;">Estou Buscando</label>
 				
-							<div class="col-md-12">
+							<div class="col-md-12 search-for">
 								<div class="btn-group" data-toggle="buttons" style="width:100%">
-									<label class="btn btn-default" style="width:50%" id="prof">
-										<input name="pesq" type="radio" value="p" checked="s">Profissional / Fornecedor(com endereço físico)
+									<label class="btn btn-default" style="width:50%" for="prof" title="Profissional/Fornecedor (com endereço físico)">Profissional / Fornecedor
+										<input name="pesq" type="radio" value="p" id="prof" checked="s">
 									</label>
-									<label class="btn btn-default" style="width:50%">
-										<input name="pesq" type="radio" value="f">Fornecedor(com endereço virtual)
+									<label class="btn btn-default" style="width:50%" for="fornV" title="Fornecedores com Lojas virtuais">Fornecedor
+										<input name="pesq" type="radio" value="f" id="fornV">
 									</label>
 								</div>
 							</div>
@@ -52,14 +52,14 @@
 								</select>
 							</div>
 							
-							<div class="col-md-2" style="border: none">
-								<select class="selectpicker" id="categoria-buscada" name="categoria-buscada" data-width="100%" >
+							<div class="col-md-2" style="border: none" >
+								<select class="textIndent form-control selectpicker " id="categoria-buscada" name="categoria-buscada" data-width="100%" >
 									<option value="p">Profissional</option>
-									<option value="f">Fornecedor</option>
+									<option value="f" >Fornecedor</option>
 								</select>
 							</div>
 							<div class="col-md-1" style=" border: none">
-								<button type="submit" id="buscar"  onclick="buscar();" class="btn orange"><i class="fa fa-search" aria-hidden="true"></i></button>
+								<button type="submit" id="buscar"  onclick="buscar();" class="btn orange"><i class="ion-ios-search" aria-hidden="true" style="font-size:19px;"></i></button>
 							</div>
 							</form>
 						</div>
@@ -79,14 +79,12 @@
 								</select>
 							</div>
 							<div class="col-md-1" style=" border: none">
-								<button type="submit" id="buscar" class="btn orange"><i class="fa fa-search" aria-hidden="true"></i></button>
+								<button type="submit" id="buscar" class="btn orange"><i class="ion-ios-search" aria-hidden="true" style="font-size:19px;"></i></button>
 							</div>
 							</form>
 						</div>
 						
 					
-				</div>
-
 <script type="text/javascript" src="/pegapa/javascript/jquery-2.2.3.js"></script>
 <script type="text/javascript" src="/pegapa/javascript/inputMask.js"></script>
 <script src="/pegapa/js/bootstrap.min.js"></script>
@@ -113,7 +111,7 @@ $(document).ready(function(){
 		$('#pesquisa-normal').toggle();
 	})
 	
-	$('#prof').addClass("active");
+	$('label[for="prof"]').addClass("active");
 	$.ajax({
 		url: '/pegapa/SelectServlet',
 		method: 'POST',
@@ -133,7 +131,9 @@ $(document).ready(function(){
 });
 
 </script>
+				</div>
 
 
-</body>
-</html>
+
+<!-- </body> -->
+<!-- </html> -->

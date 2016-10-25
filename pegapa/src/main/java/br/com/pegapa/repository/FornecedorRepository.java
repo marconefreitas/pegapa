@@ -93,4 +93,10 @@ public class FornecedorRepository {
 						.setParameter("email", emailBuscado)
 						.getResultList();
 	}
+
+	public Double recuperarNotaFornecedor(Integer codigo) {
+		return this.manager.createQuery("select avg(s.avaliacao) from solicitacao s where s.fornecedor.codFornecedor =:id", Double.class)
+				.setParameter("id", codigo)
+				.getSingleResult();
+	}
 }

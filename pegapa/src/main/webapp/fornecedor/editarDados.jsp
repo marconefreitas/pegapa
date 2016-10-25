@@ -13,7 +13,7 @@
 	<link href="/pegapa/estilos/estilos.css" rel="stylesheet">
 	<link href="/pegapa/estilos/jquery.bxslider.css" rel="stylesheet">
 	<link href="/pegapa/estilos/estilo-form.css" rel="stylesheet">
-
+	<link rel="shortcut icon" href="/pegapa/icopegapa.png" >
 	<!-- Bootstrap select -->
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
 
@@ -25,7 +25,7 @@
 		<header class="row header-page">
 			<!-- GAMBIARRA NA TAG FIGURE, RETIRAR DEPOIS -->
 			<figure style="float:left; padding-right:15px; top:1px; position:absolute;">
- 				<a href="/pegapa/usuario/paginaInicial.jsp"><img src="/pegapa/estilos/images/logo_pegapa.png" width="130px;" /></a>
+ 				<a href="/pegapa/fornecedor/paginaInicial.jsp"><img src="/pegapa/estilos/images/backlogo.jpg" class="img-logo" /></a>
 			</figure>
 			<div class="welcome" style="width: 82%; order:2">
 				<span class="glyphicon glyphicon-user" style="float: right; line-height: 33px;"></span>
@@ -35,6 +35,8 @@
 		</header>
 	
 			<div role="main">
+				
+				
 				<c:if test="${not empty sucesso}">
 					<div class="alert alert-success alert-dismissible fade in" role="alert">
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -44,6 +46,10 @@
 					</div>
 				</c:if>
 				<div class="container">
+					<nav class="breadcrumb">
+						<a class="breadcrumb-item" href="/pegapa/fornecedor/paginaInicial.jsp">Página Inicial</a> /
+  						<span class="breadcrumb-item active">Edição de Dados</span>
+					</nav>
 					<div class="col-md-9 col-md-offset-1" >
 						<form id="form-edit-user" action="/pegapa/ServletFornecedor" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 							<input type="hidden" name="edicaoForn" value="S">
@@ -102,6 +108,14 @@
 										<input type="text" style="min-width: 50%; border-right:0" class="form-control" name="nome" id="nomeFantasia" value="${fornec.nomeFantasia}"/>
 										<span class="input-group-addon" style="background-color:white" ><i></i></span>
 									</div>
+									
+									<br/><br/>
+									<div class="input-group" style=" width:67.9%;">
+										<div class="label-textarea">Informações sobre Você:</div>
+										<textarea class="form-control" rows="5" style="border-radius: 0px 0px" maxlength="300"
+										name="descricaoForn" id="descriptionForn" >${fornec.descricaoServicosPrestados}</textarea>
+										<label class="red select-error" hidden>Informe uma breve descrição sobre o(s) seu(s) serviços</label>	
+									</div>
 									<br/><br/>
 									<div class="input-group">
 										<span class="input-group-addon">CNPJ</span>
@@ -122,7 +136,7 @@
 									</div>
 									<br/><br/>
 									<div class="input-group">
-										<span class="input-group-addon">Rua</span>
+										<span class="input-group-addon">Logradouro</span>
 										<input type="text" class="form-control" name="rua" style="border-right:0" id="rua" value="${fornec.endereco.rua}" />
 										<span class="input-group-addon" style="background-color:white" ><i></i></span>
 									</div>
@@ -136,7 +150,7 @@
 									<br/><br/>
 									<div class="input-group">
 										<span class="input-group-addon">URL</span>
-										<input type="text" class="form-control"  id="urlForn" name="url" value="${fornec.url}" />
+										<input type="text" class="form-control" style="border-right:0"  id="urlForn" name="url" value="${fornec.url}" />
 										<span class="input-group-addon" style="background-color:white" ><i></i></span>
 									</div>
 									<br/><br/>
@@ -190,7 +204,7 @@
 									<br/><br/>
 									<div class="input-group">
 										<span class="input-group-addon">Email</span>
-										<input type="text" class="form-control" name="emailForn" id="email" value="${fornec.email}" />
+										<input type="text" class="form-control"  style="border-right:0" name="emailForn" id="email" value="${fornec.email}" />
 										<span class="input-group-addon" style="background-color:white" ><i></i></span>
 									</div>
 									<div class="col-md-12" style="padding:15px 0px 15px 0px">
@@ -221,7 +235,7 @@
 	<script type="text/javascript" src="/pegapa/javascript/recursos.js" charset="utf-8"></script>
 	<script type="text/javascript" src="/pegapa/javascript/busca.js" charset="utf-8"></script>
 	<script type="text/javascript" src="/pegapa/javascript/fornecedor.js" charset="utf-8"></script>
-<!-- 	<script type="text/javascript" src="/pegapa/javascript/imagem.js" charset="utf-8"></script> -->
+	<script type="text/javascript" src="/pegapa/javascript/validcadastro/validateRegisterProvider.js" charset="utf-8"></script>
 	<script>	
 	$(document).ready(function(){
 		

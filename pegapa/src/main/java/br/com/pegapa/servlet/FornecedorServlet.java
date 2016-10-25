@@ -81,16 +81,15 @@ public class FornecedorServlet extends HttpServlet{
 	
 	
 	private void buscaEmailNoBanco(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		response.setContentType("text/html;charset=UTF-8");
 		String email = request.getParameter("email");
 		
 		List<String> emails = fornRepo.emailsCadastrados(email);
-		JSONObject json = new JSONObject();
 		if(emails.isEmpty()){
-			json.put("sucesso", "Email válido");
+			response.getWriter().write("true");
 		} else{
-			json.put("erro", "Email já cadastrado");
+			response.getWriter().write("false");
 		}
-		response.getWriter().write(json.toString());
 	}
 
 
@@ -257,7 +256,9 @@ public class FornecedorServlet extends HttpServlet{
 				e.setNumero(request.getParameter("numFornecedor"));
 				e.setRua(request.getParameter("ruaFornecedor"));
 				f.setEndereco(e);
-
+				
+				f.setDescricaoServicosPrestados(request.getParameter("descricao"));
+				
 				f.setTel1(request.getParameter("tel1"));
 				f.setTel2(request.getParameter("tel2"));
 				f.setEmail(request.getParameter("emailF"));
@@ -298,7 +299,7 @@ public class FornecedorServlet extends HttpServlet{
 
 			f.setUrl(request.getParameter("urlVirt"));
 
-
+			f.setDescricaoServicosPrestados(request.getParameter("descricaoVirt"));
 			int leitorDeBytes;
 			byte [] arrayByte = new byte[1024];
 			while((leitorDeBytes = is.read(arrayByte, 0, arrayByte.length)) != -1){
@@ -379,8 +380,10 @@ public class FornecedorServlet extends HttpServlet{
 			e.setNumero(numero);
 			e.setCep(cep);
 			f.setEndereco(e);
-			
 			//FIM
+			
+			String descricaoFornecedor = request.getParameter("descricaoForn");
+			f.setDescricaoServicosPrestados(descricaoFornecedor);
 			String ramoAtuacao = request.getParameter("ramoAtuacaoFisico");
 			f.setRamoAtuacao(ramoAtuacao);
 			String estado = request.getParameter("estado_forn");
@@ -401,9 +404,7 @@ public class FornecedorServlet extends HttpServlet{
 			f.setNomeFantasia(nome);
 			f.setCnpj("");
 			f.setNomeResponsavel("");
-			f.getEndereco().setCep("");
-			f.getEndereco().setRua("");
-			f.getEndereco().setNumero("");
+			
 			String url = request.getParameter("url");
 			f.setUrl(url);
 			f.setEstado("");
@@ -411,6 +412,8 @@ public class FornecedorServlet extends HttpServlet{
 			f.setBairro("");
 			String ramoAtuacao = request.getParameter("ramoAtuacaoFisico");
 			f.setRamoAtuacao(ramoAtuacao);
+			String descricaoFornecedor = request.getParameter("descricaoForn");
+			f.setDescricaoServicosPrestados(descricaoFornecedor);
 			
 			String email = request.getParameter("emailForn");
 			f.setEmail(email);
@@ -455,7 +458,7 @@ public class FornecedorServlet extends HttpServlet{
 		}
 		
 		request.getSession().setAttribute("fornec", forn);
-		
+		request.getSession().removeAttribute("sucesso");
 		//request.getRequestDispatcher("usuario/editarDados.jsp").forward(request, response);
 		response.sendRedirect("fornecedor/editarDados.jsp");
 	}
@@ -463,7 +466,7 @@ public class FornecedorServlet extends HttpServlet{
 	
 	
 	//TODO OS METODOS ACEITAR SOLICITACAO E REJEITAR SOLICITAÇAO PODERIAM ESTAR NUMA CLASSE CHAMADA SOLICITACAO SERVLET
-	//POIS ASSIM TANTO ESTES MÉTODOS NESTA CLASSE, QUANTO OS METODOS PRESENTE NA CLASSE PROFISSIONALSERVLET PODERIAM DEIXAR DE
+	//POIS ASSIM TANTO ESTES MÉTODOS NESTA CLASSE, QUANTO OS METODOS PRESENTES NA CLASSE PROFISSIONALSERVLET PODERIAM DEIXAR DE
 	//EXISTIR E TORNAR A ORIENTAÇAO A OBJETO MENOS REPETITIVA E MAIS COESA
 	private void aceitarSolicitacao(HttpServletRequest request, HttpServletResponse response) {
 		Integer idSolicitacao = Integer.valueOf(request.getParameter("idSolicitacao"));

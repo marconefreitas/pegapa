@@ -69,6 +69,9 @@ public class Profissional {
 	private byte[] imagem;
 	
 	@Expose
+	private String descricaoProfissao;
+	
+	@Expose
 	@Transient
 	private Double nota;
 	
@@ -213,6 +216,15 @@ public class Profissional {
 		this.imagem = imagem;
 	}
 	
+	@Column(length=300, nullable=true, name="descricaoProfissao")
+	public String getDescricaoProfissao() {
+		return descricaoProfissao;
+	}
+
+	public void setDescricaoProfissao(String descricaoProfissao) {
+		this.descricaoProfissao = descricaoProfissao;
+	}
+
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, targetEntity=Solicitacao.class, mappedBy="profissional")
 	public Set<Solicitacao> getSolicitacoes() {
 		return solicitacoes;

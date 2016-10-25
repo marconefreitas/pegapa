@@ -1,12 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-</head>
-<body>
-<div class="modal fade" id="modal-cadastro-fornecedor" role="dialog">
+<div class="modal fade" id="modal-cadastro-fornecedor" data-backdrop="static" role="dialog">
 			<div class="modal-dialog">
 				<div class="modal-content" style="padding:15px">
 					<div class="modal-header" style="padding-left:0"> 
@@ -19,7 +11,7 @@
         						<div class="radio radio-default">
             						<label for="fis">
           							<input type="radio" name="tipo" id="fis" value="Loja Fisica">
-               		 					Loja FÃ­sica
+               		 					Loja Física
             						</label>
         						</div>
         					</div>
@@ -36,7 +28,9 @@
 									<fieldset class="form-group">
 										<div class="input-group">
 											<span class="input-group-addon">Nome Fantasia</span>
-											<input type="text" class="form-control" id="nomeFantasia" name="nomeFantasia" placeholder="Informe o nome fantasia do seu estabelecimento"/>
+											<input type="text" class="form-control" id="nomeFantasia" name="nomeFantasia" style="border-right:0px;"
+											placeholder="Informe o nome fantasia do seu estabelecimento"/>
+											<span class="input-group-addon" style="background-color:white" ><i></i></span>
 										</div>
 									</fieldset>
 								</div>
@@ -44,24 +38,36 @@
 									<fieldset class="form-group">
 										<div class="input-group">
 											<span class="input-group-addon">CNPJ</span>
-											<input type="text" class="form-control" data-masc="cnpj" maxlength="18" id="cnpjForn" name="cnpj" placeholder=""/>
+											<input type="text" class="form-control" data-masc="cnpj" style="border-right:0px;"
+											maxlength="18" id="cnpjForn" name="cnpj" placeholder=""/>
+											<span class="input-group-addon" style="background-color:white" ><i></i></span>
 										</div>
 									</fieldset>
 								</div>
 								
 								
 								<div class="row">
-									<fieldset class="form-group">
+									<fieldset class="form-group" id="fBusinessLine">
 										<select class="selectpicker" id="ramoAtuacaoFisico"  name="ramoAtuacaoFisico" data-width="100%" >
-											<option data-hidden="true" val="None">Ramo de AtuaÃ§Ã£o</option>
+											<option value="N">Ramo de Atuação</option>
 											<option value="Telhadista">Telhadista</option>
 											<option value="Madeireira">Madeireira</option>
 											<option value="Pintura">Pintura</option>
-											<option value="VidraÃ§aria">VidraÃ§aria</option>
-											<option value="ConstruÃ§Ãµes em Geral">ConstruÃ§Ãµes em Geral</option>
+											<option value="Vidraçaria">Vidraçaria</option>
+											<option value="Construções em Geral">Construções em Geral</option>
 										</select>
+										<label class="red select-error" hidden>Escolha um Ramo de Atuação</label>
 									</fieldset>
 								</div>
+								<div class="row">
+									<div class="input-group"  style="width:100%">
+										<div class="label-textarea">Informações sobre seu estabelecimento</div>
+										<textarea class="form-control" rows="5" style="border-radius: 0px 0px" 
+										placeholder="Insira aqui uma breve descrição sobre seus produtos e sobre seu estabelecimento."
+										name="descricao" maxlength="300" id="descriptionProv" ></textarea>
+										<label class="red select-error" hidden>Informe uma breve descrição sobre o(s) seu(s) produtos</label>
+									</div>
+								</div>	
 								
 								<div class="row">
 									<fieldset class="form-group">
@@ -75,8 +81,9 @@
 								<div class="row">
 									<fieldset class="form-group">
 										<div class="input-group">
-											<span class="input-group-addon">Nome do ResponsÃ¡vel</span>
-											<input type="text" class="form-control" id="" name="nomeResponsavel" placeholder=""/>
+											<span class="input-group-addon">Nome do Responsável</span>
+											<input type="text" class="form-control" id="respName" name="nomeResponsavel"  style="border-right:0px;"/>
+											<span class="input-group-addon" style="background-color:white" ><i></i></span>
 										</div>
 									</fieldset>
 								</div>
@@ -95,29 +102,33 @@
 						                    </div>
 	              						</span>
 	            					</div>
+	              					<label class="red select-error" hidden id="label-erro-foto-prov-f">Por favor, nos informe que foto usaremos no seu perfil</label>
 								</div>
 								
 								<div class="row">
-									<fieldset class="form-group">
+									<fieldset class="form-group" id="fState-prov">
 										<select class="selectpicker" id="estado-forn" data-live-search="true"  name="estado-forn" data-width="100%" >
 											<option data-hidden="true">Escolha um Estado</option>
 										</select>
+										<label class="red select-error" hidden>Escolha um Estado</label>
 									</fieldset>
 								</div>
 									
 								<div class="row">
-									<fieldset class="form-group">
+									<fieldset class="form-group" id="fCity-prov">
 										<select class="selectpicker" id="cidade-forn" data-live-search="true" name="cidade-forn" data-width="100%" >
 											<option data-hidden="true">Escolha uma Cidade</option>
 										</select>
+										<label class="red select-error" hidden>Escolha uma Cidade</label>
 									</fieldset>
 								</div>	
 								
 								<div class="row">
-									<fieldset class="form-group">
+									<fieldset class="form-group" id="fNeighb-prov">
 										<select class="selectpicker" id="bairros-forn" data-live-search="true" name="bairros-forn" data-width="100%" >
 											<option data-hidden="true">Selecione um Bairro</option>
 										</select>
+										<label class="red select-error" hidden>Selecione um Bairro</label>
 									</fieldset>
 								</div>
 								
@@ -126,14 +137,16 @@
 									<div class="form-group col-md-8" style="padding: 0px 15px 0px 0px; background-color: #fff; border:none;">
 										<div class="input-group">
 											<span class="input-group-addon">CEP</span>
-											<input type="text" class="form-control" data-masc="cep" id="cepFornecedor" name="cepFornecedor" placeholder="CEP"/>
+											<input type="text" class="form-control" data-masc="cep" id="cepFornecedor" 
+											name="cepFornecedor" style="border-right:0px;"/>
+											<span class="input-group-addon" style="background-color:white" ><i></i></span>
 										</div>
 									</div>
 								
 									<div class="form-group col-md-4" style="padding: 0px 0px 0px 15px; background-color: #fff; border:none;">
 										<div class="input-group">
-											<span class="input-group-addon">NÂº</span>
-											<input type="text" class="form-control" id="numeroFornecedor" name="numFornecedor" placeholder=""/>
+											<span class="input-group-addon">Nº</span>
+											<input type="text" class="form-control" id="numeroFornecedor" name="numFornecedor" />
 										</div>
 									</div>
 								</div>
@@ -142,7 +155,8 @@
 								<fieldset class="form-group">
 									<div class="input-group">
 										<span class="input-group-addon">Logradouro</span>
-										<input type="text" class="form-control" disabled id="ruaFornecedor" name="ruaFornecedor" />
+										<input type="text" class="form-control" id="ruaFornecedor" name="ruaFornecedor"  style="border-right:0px;"/>
+										<span class="input-group-addon" style="background-color:white" ><i></i></span>
 									</div>
 								</fieldset>
 							</div>
@@ -151,7 +165,8 @@
 									<fieldset class="form-group">
 										<div class="input-group">
 											<span class="input-group-addon">Telefone (1)</span>
-											<input type="text" class="form-control" data-masc="telefone" name="tel1" id="telefoneFornecedor" placeholder=""/>
+											<input type="text" class="form-control" data-masc="telefone" name="tel1" id="telefoneFornecedor" style="border-right:0px;"/>
+											<span class="input-group-addon" style="background-color:white" ><i></i></span>
 										</div>
 									</fieldset>
 								</div>
@@ -159,7 +174,8 @@
 									<fieldset class="form-group">
 										<div class="input-group">
 											<span class="input-group-addon">Telefone (2)</span>
-											<input type="text" class="form-control" data-masc="celular" name="tel2" id="celularFornecedor" placeholder=""/>
+											<input type="text" class="form-control" data-masc="celular" name="tel2"  style="border-right:0px;" id="celularFornecedor"/>
+											<span class="input-group-addon" style="background-color:white" ><i></i></span>
 										</div>
 									</fieldset>
 								</div>
@@ -167,7 +183,9 @@
 									<fieldset class="form-group">
 										<div class="input-group">
 											<span class="input-group-addon">Email</span>
-											<input type="email" class="form-control" name="emailF" id="emailFornecedor" placeholder="Informe seu E-mail"/>
+											<input type="email" class="form-control" name="emailF" style="border-right:0px;"
+											id="emailFornecedor" placeholder="Informe seu E-mail"/>
+											<span class="input-group-addon" style="background-color:white" ><i></i></span>
 										</div>
 									</fieldset>
 								</div>
@@ -175,21 +193,25 @@
 									<fieldset class="form-group">
 										<div class="input-group">
 											<span class="input-group-addon">Senha</span>
-											<input type="password" class="form-control" name="senhaF" id="senhaFornecedorFisico" placeholder="Informe sua senha"/>
+											<input type="password" class="form-control" name="senhaF" style="border-right:0px;"
+											 id="senhaFornecedorFisico" placeholder="Informe sua senha"/>
+											<span class="input-group-addon" style="background-color:white" ><i></i></span>
 										</div>
 									</fieldset>
 								</div>
 								<div class="row">
 									<fieldset class="form-group">
 										<div class="input-group">
-											<span class="input-group-addon">ConfirmaÃ§Ã£o</span>
-											<input type="password" class="form-control" id="confirmSenhaFornecedorFisico" placeholder="Informe a senha novamente"/>
+											<span class="input-group-addon">Confirmação</span>
+											<input type="password" class="form-control" id="confirmSenhaFornecedorFisico" 
+											placeholder="Informe a senha novamente" style="border-right:0px;"/>
+											<span class="input-group-addon" style="background-color:white" ><i></i></span>
 										</div>
 									</fieldset>
 								</div>
 								
 								<div class="row" style="text-align: right;">
-									<button type="button" onclick="cancelaTudo('modal-cadastro-fornecedor')"class="btn btn-warning">Cancelar</button>
+									<button type="button" onclick="cancelaTudo('modal-cadastro-fornecedor')"class="btn btn-warning">Fechar</button>
 									<button type="button" id="cadastrarFornecedorFisico" class="btn orange">Cadastrar</button>
 								</div>
 							</section>
@@ -199,7 +221,8 @@
 									<fieldset class="form-group">
 										<div class="input-group">
 											<span class="input-group-addon">Nome Fantasia</span>
-											<input type="text" class="form-control" id="nomeFantasiaVirt" name="nomeFantasiaVirt" placeholder="Informe o nome fantasia do seu estabelecimento"/>
+											<input type="text" class="form-control" id="nomeFantasiaVirt"  style="border-right:0px;" name="nomeFantasiaVirt" placeholder="Informe o nome fantasia do seu estabelecimento"/>
+											<span class="input-group-addon" style="background-color:white" ><i></i></span>
 										</div>
 									</fieldset>
 								</div>
@@ -207,27 +230,39 @@
 									<fieldset class="form-group">
 										<div class="input-group">
 											<span class="input-group-addon">URL</span>
-											<input type="text" class="form-control" id="urlVirt" name="urlVirt" placeholder=""/>
+											<input type="text" class="form-control" id="urlVirt" name="urlVirt"   style="border-right:0px;"/>
+											<span class="input-group-addon" style="background-color:white" ><i></i></span>
 										</div>
 									</fieldset>
 								</div>
 								
 								<div class="row">
-									<fieldset class="form-group">
+									<fieldset class="form-group" id="fBusinessLineVirt">
 										<select class="selectpicker" id="ramoAtuacaoVirt"  name="ramoAtuacaoVirtual" data-width="100%" >
-											<option data-hidden="true" val="None">Ramo de AtuaÃ§Ã£o</option>
+											<option value="N">Ramo de Atuação</option>
 											<option value="Telhadista">Telhadista</option>
 											<option value="Madeireira">Madeireira</option>
 											<option value="Pintura">Pintura</option>
-											<option value="VidraÃ§aria">VidraÃ§aria</option>
-											<option value="ConstruÃ§Ãµes em Geral">ConstruÃ§Ãµes em Geral</option>
+											<option value="Vidraçaria">Vidraçaria</option>
+											<option value="Construções em Geral">Construções em Geral</option>
 										</select>
+										<label class="red select-error" hidden>Escolha um Ramo de Atuação</label>
 									</fieldset>
 								</div>
 								
 								<div class="row">
+									<div class="input-group"  style="width:100%">
+										<div class="label-textarea">Informações sobre seu estabelecimento</div>
+										<textarea class="form-control" rows="5" style="border-radius: 0px 0px" 
+										placeholder="Insira aqui uma breve descrição sobre seus produtos e sobre seu estabelecimento."
+										name="descricaoVirt" maxlength="300" id="descriptionProvVirt" ></textarea>
+										<label class="red select-error" hidden>Informe uma breve descrição sobre o(s) seu(s) produtos</label>
+									</div>
+								</div>	
+								
+								<div class="row">
 									 <div class="input-group image-preview">
-	                					<input type="text" class="form-control image-preview-filename" disabled="disabled">
+	                					<input type="text" class="form-control image-preview-filename" id="provVirt" disabled="disabled">
 					                	<span class="input-group-btn">
 						                    <button type="button" class="btn btn-default image-preview-clear" style="display:none;">
 						                        <span class="glyphicon glyphicon-remove"></span> Limpar
@@ -239,12 +274,14 @@
 						                    </div>
 	              						</span>
 	            					</div>
+	              					<label class="red select-error" hidden id="label-erro-foto-virt">Por favor, nos informe que foto usaremos no seu perfil</label>
 								</div>
 								<div class="row">
 									<fieldset class="form-group">
 										<div class="input-group">
 											<span class="input-group-addon">Email</span>
-											<input type="email" class="form-control" id="emailFornecedorVirt" name="emailFornVirt" placeholder="Informe seu E-mail"/>
+											<input type="email" class="form-control" id="emailFornecedorVirt" name="emailFornVirt"  style="border-right:0px;" placeholder="Informe seu E-mail"/>
+											<span class="input-group-addon" style="background-color:white" ><i></i></span>
 										</div>
 									</fieldset>
 								</div>
@@ -252,20 +289,22 @@
 									<fieldset class="form-group">
 										<div class="input-group">
 											<span class="input-group-addon">Senha</span>
-											<input type="password" class="form-control" id="senhaFornecedorVirt" name="senhaFornVirt" placeholder="Informe sua senha"/>
+											<input type="password" class="form-control" id="senhaFornecedorVirt"  style="border-right:0px;" name="senhaFornVirt" placeholder="Informe sua senha"/>
+											<span class="input-group-addon" style="background-color:white" ><i></i></span>
 										</div>
 									</fieldset>
 								</div>
 								<div class="row">
 									<fieldset class="form-group">
 										<div class="input-group">
-											<span class="input-group-addon">ConfirmaÃ§Ã£o</span>
-											<input type="password" class="form-control" id="confirmSenhaFornVirt" placeholder="Informe a senha novamente"/>
+											<span class="input-group-addon">Confirmação</span>
+											<input type="password" class="form-control" id="confirmSenhaFornVirt"  style="border-right:0px;" placeholder="Informe a senha novamente"/>
+											<span class="input-group-addon" style="background-color:white" ><i></i></span>
 										</div>
 									</fieldset>
 								</div>
 								<div class="row" style="text-align: right;">
-									<button type="button" onclick="cancelaTudo('modal-cadastro-fornecedor')"class="btn btn-warning">Cancelar</button>
+									<button type="button" onclick="cancelaTudo('modal-cadastro-fornecedor')"class="btn btn-warning">Fechar</button>
 									<button type="button" id="cadastrarFornecedorVirtual" class="btn orange">Cadastrar</button>
 								</div>
 							</section>
@@ -275,11 +314,16 @@
 				</div>
 			</div>
 		</div>
-		<script type="text/javascript">
+		<script>
+			$('#modal-cadastro-fornecedor').on('hidden.bs.modal', function () {
+				$(this).find('form')[0].reset();
+				$(this).find('i').removeClass('glyphicon glyphicon-thumbs-up')
+						  		 .removeClass('glyphicon glyphicon-thumbs-down');
+				$('.alert').hide();
+			})
 			$(document).ready(function(){
-// 				$('section[name="lojaVirtual"]').hide();
-// 				$('section[name="lojaFisica"]').hide();
+				cancelaTudo('modal-cadastro-fornecedor');
+				$('input#fis').prop("checked", true);
+				$('section[name="lojaFisica"]').show();
 			});
 		</script>
-</body>
-</html>

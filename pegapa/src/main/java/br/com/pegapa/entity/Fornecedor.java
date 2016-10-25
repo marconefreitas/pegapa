@@ -12,10 +12,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.google.gson.annotations.Expose;
 
+@Table(name="fornecedor")
 @Entity(name="fornecedor")
 public class Fornecedor {
 
@@ -86,7 +88,11 @@ public class Fornecedor {
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="fornecedorFk", targetEntity=Comentario.class)
 	private Set<Comentario> comentarios;
 	
-
+	@Expose
+	@Column(length=300, nullable=true, name="descricaoServPrestado")
+	private String descricaoServicosPrestados;
+	
+	@Expose
 	@Transient
 	private Double avaliacao;
 
@@ -240,6 +246,14 @@ public class Fornecedor {
 
 	public void setComentarios(Set<Comentario> comentarios) {
 		this.comentarios = comentarios;
+	}
+
+	public String getDescricaoServicosPrestados() {
+		return descricaoServicosPrestados;
+	}
+
+	public void setDescricaoServicosPrestados(String descricaoServicosPrestados) {
+		this.descricaoServicosPrestados = descricaoServicosPrestados;
 	}
 
 	

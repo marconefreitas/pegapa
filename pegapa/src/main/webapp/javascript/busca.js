@@ -1,7 +1,25 @@
 /**
  * 
  */
-
+$('#ordenation-professional').click(function(){
+	var profissionaisOrdenados = $('#section-professionals .profissional-box')
+	.get()
+	.sort(function (a, b){
+		var nota1 = $(a).find('#notaProf').val();
+		var nota2 = $(b).find('#notaProf').val();
+		nota1 =  (nota1 == ""? 0 : nota1);
+		nota2 = (nota2 == ""? 0:nota2);
+		return nota2 > nota1;
+	})
+	.map(function(el){
+		return $(el).clone(true)[0];
+	});
+	$('#section-professionals').html(profissionaisOrdenados);
+	$('#ordenation-success').show();
+	setTimeout(function(){
+		$("#ordenation-success").css("display","none");
+	}, 2000);  
+})
 
 $('#filtros-select').on('change', function(){
 	$('.profissional-box').each(function(index){
@@ -63,12 +81,13 @@ $('#filtros-experiencia').on("change", function(){
 	}
 })
 
+
 $('#filtros-ocupacao').on("change", function(){
 	if($('#filtros-ocupacao option:selected').text() == "Todas"){
 		$('.profissional-box').each(function(index){
 			$(this).show();
 		});
-	} else{
+	}else{
 	
 		$('.profissional-box').each(function(index){
 			if( ($(this).find('.work').text() == $('#filtros-ocupacao option:selected').text())){
@@ -123,14 +142,25 @@ function montaModal(data){
 	var figure = $('<figure>').addClass('figure-prof')
 							  .append($('<img>').attr('src', data.photo));
 	
+	/* ---------------------------------- MONTA O TEXTAREA COM A DESCRIÇÃO DO PROFISSIONAL -----------------------------------------*/
 	var textArea = $('<textarea>').addClass('form-control')
 								  .addClass('commentText')
-								  .addClass('pull-right')
 								  .attr('id', data.id + 'txArea')
 								  .attr('placeholder' , 'Insira aqui uma pequena descrição da sua solicitação. Max : 200 caracteres')
 								  .attr('maxlength', '200');
 	
-	var servicosSelect = $('<select id="select' + data.id + '" style="width:55%; float:right">');
+	var cabecalhoTextArea = $('<div>').addClass('label-textarea')
+									  .html("Descrição da Solicitação");
+	
+	var descricaoProfissional = $('<div>').addClass('input-group')
+										  .addClass('input-custom-group')
+										  .append(cabecalhoTextArea)
+										  .append(textArea);
+	/* ----------------------------------  ---------------- FIM ----------------- ---------------------------------- --------------*/
+	
+	
+	/* ---------------------------------- MONTA A TAG SELECT COM OS SERVIÇOS DO PROFISSIONAL -----------------------------------------*/
+	var servicosSelect = $('<select id="select' + data.id + '" style="float:left">');
 	var servicosOptions = "<option selected value='0'>Escolha um Serviço</option>";
 	
 	if(data.servicos.length > 1){
@@ -144,20 +174,45 @@ function montaModal(data){
 		$(servicosSelect).attr('disabled', 'disabled');
 	}
 	servicosSelect.append(servicosOptions);
+	/* ---------------------------------- FIM ------------------------------------------------------------------------------------------*/
+	
+	var abreTagLabel = "<label style='font-weight:normal;'>";
+	var fechaTagLabel = "</label>";
+	
 	var divConteudoModal =  $("<div>").addClass("conteudo-profissional")
-									  .append("<b>Ocupação : </b>" + data.ocupacao + "<br/>")
-									  .append("<b>Nivel de Experiência: </b><span name='exp' data-year='" + anosExp + "'" + " data-month='" + mesExp +  "'>" + experiencia + "</span><br/>")
-									  .append("<b>Email: </b>" + data.email + "<br/>")
-									  .append("<label style='line-height:27px;'> Serviços Cadastrados:</label>" )
-									  .append(servicosSelect)
-									  .append("<b>Bairro : </b>" + data.bairro + "<br/>")
-									  .append("<b>CEP :</b> " + data.cep + "<br/>")
-									  .append("<b>Avaliação no Sistema :</b>" + data.nota)
-									  .append("<hr/>")
-									  .append('<b>Descrição :</b>')
-									  .append(textArea);
+									  .css('float', 'left')
+									  .append("<label>Ocupação :</label> <br/>")
+									  .append("<label>Nivel de Experiência: </label><br/>")
+									  .append("<label for='mail'>Email: </label><br/>")
+									  .append("<label>Bairro : </label> <br/>")
+									  .append("<label>CEP :</label> <br/>")
+									  .append("<label>Avaliação no Sistema :</label>")
+									  .append("<label style='line-height:16px;'> Serviços Cadastrados:</label>" )
+									  .append("<hr/>");
+	
+	var notaProfissional  = "Não Definida";
+	if(data.nota){
+		notaProfissional = data.nota;
+	}
+	
+	var divConteudoModal1 = $("<div>").css('float', 'left')
+				.append(abreTagLabel + data.ocupacao + fechaTagLabel)
+				.append('</br>')
+				.append(abreTagLabel +  "<span name='exp' data-year='" + anosExp + "'" + " data-month='" + mesExp +  "'>" + experiencia + "</span>" + fechaTagLabel)
+				.append('</br>')
+				.append('<label id="mail" style="font-weight:normal;">' + data.email + fechaTagLabel)
+				.append('</br>')
+				.append(abreTagLabel + data.bairro + fechaTagLabel)
+				.append('</br>')
+				.append(abreTagLabel + data.endereco.cep + fechaTagLabel)
+				.append('</br>')
+				.append(abreTagLabel + notaProfissional + fechaTagLabel)
+				.append('</br>')
+				.append(servicosSelect)
+	
+	/* ----------------------------------------------------------- MONTA A PARTE DOS COMENTÁRIOS DO PROFISSIONAL -----------------------------------------*/
 	var divAntesComments;
-	if(data.comentarios){
+	if(data.comentarios.length > 0){
 		
 		var divAntesComments = $("<div>").addClass("clear")
 		.html('Comentários');
@@ -177,15 +232,33 @@ function montaModal(data){
 		
 	}
 	
+	/* ---------------------------------- FIM --------------------------------------------------------------------------------------*/
+	
+	/* ------------------------ INICIO BLOCKQUOTE ------------------------ */
+	var blockquote = $('<pre>').css("white-space", "normal")
+							   .css('min-height', '175px')
+							   .html(data.descricaoProfissao);
+	
+	
+	
+	
+	
+	/* ------------------------ FIM BLOCKQUOTE ------------------------ */
+	
+	
 	var fieldset = $('<fieldset>').addClass('form-group')
 	 .css("width", "68%")
 	 .css("float", "right")
-	 .append(divConteudoModal);
+	 .append(blockquote)
+	 .append(divConteudoModal)
+	 .append(divConteudoModal1);
 	
 	
-	var divModalBody = $("<div>").addClass("modal-body").append(fieldset)
-														.append(figure)
-														.append(divAntesComments);
+	var divModalBody = $("<div>").addClass("modal-body")
+								 .append(fieldset)
+								 .append(figure)
+								 .append(descricaoProfissional)
+								 .append(divAntesComments);
 	
 	var divBotaoEnviarSolicitacao = $("<div>").attr("id", "enviarSolicitacao")
 											  .addClass("btn-group btn-group-justified")
@@ -205,6 +278,7 @@ function montaModal(data){
 	
 	
 	var divModalDialog = $("<div>").addClass("modal-dialog")
+									.addClass("box-profissional")
 									.attr("id", "box-profissional")
 									.attr("role", "dialog")
 									//.on('hidden', function(){$(this).remove();})
@@ -213,6 +287,7 @@ function montaModal(data){
 	
 	var divModalFade = $("<div>").addClass("modal fade")
 								 .attr("id", "box")
+								 .css('overflow', 'auto')
 								 .attr("name", "box")
 								 .append(divModalDialog);
 	divModalFade.modal("show");
@@ -298,7 +373,6 @@ function recuperaProfissionalCompleto(profissional){
 		method: 'POST',
 		success :  function (data){
 			data.photo = photo;
-			console.log(data);
 			montaModal(data);
 		}
 	});

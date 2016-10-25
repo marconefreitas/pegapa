@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -13,11 +13,13 @@
 	<link href="/pegapa/estilos/estilos.css" rel="stylesheet">
 	<link href="/pegapa/estilos/jquery.bxslider.css" rel="stylesheet">
 	<link href="/pegapa/estilos/estilo-form.css" rel="stylesheet">
+	
+	<link rel="shortcut icon" href="/pegapa/icopegapa.png" >
 
 	<!-- Bootstrap select -->
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
 
-	<title>Solicitações</title>
+	<title>SolicitaÃ§Ãµes</title>
 </head>
 </head>
 <body>
@@ -25,7 +27,7 @@
 		<header class="row header-page" style="display:flex;" >
 			<!-- GAMBIARRA NA TAG FIGURE, RETIRAR DEPOIS -->
 			<figure style="float:left; padding-right:15px; order:1; position: relative; top: -17px;">
- 				<a href="paginaInicial.jsp"><img src="/pegapa/estilos/images/logo_pegapa.png" width="130px;" /></a>
+ 				<a href="paginaInicial.jsp"><img src="/pegapa/estilos/images/backlogo.jpg" class="img-logo" /></a>
 			</figure>
 			<div class="welcome" style="width: 82%; order:2">
 				<span class="glyphicon glyphicon-user" style="float: right; line-height: 33px;"></span>
@@ -33,26 +35,29 @@
 			</div>
 		</header>
 	
-		<div role="main">
-			
+		<div role="main" style="min-height:450px;">
+			<nav class="breadcrumb">
+				<a class="breadcrumb-item" href="/pegapa/profissional/paginaInicial.jsp">PÃ¡gina Inicial</a> /
+  				<span class="breadcrumb-item active">PortfÃ³lio de ServiÃ§os</span>
+			</nav>
 			<div class="row" style="margin: 0 auto 15px; width:100%; padding:0; float:right;">
-				<h4 class="col-md-8" style="text-align: left;">Portfólio de Serviços</h4>
-				<div class="col-md-4"><button class="btn btn-info btn-lg btn-block" style="float:left;" onclick="$('#novo-servico').modal();">Novo Serviço</button></div>
+				<h4 class="col-md-8" style="text-align: left;">PortfÃ³lio de ServiÃ§os</h4>
+				<div class="col-md-4"><button class="btn btn-info btn-lg btn-block" style="float:left;" onclick="$('#novo-servico').modal();">Novo ServiÃ§o</button></div>
 			</div>
 			<div class="clearfix"></div>
 			<c:if test="${empty lista }">
 				<div class="alert alert-warning">
-					<span class="glyphicon glyphicon-record"></span> <strong>Atenção</strong>
+					<span class="glyphicon glyphicon-record"></span> <strong>AtenÃ§Ã£o</strong>
                 	<hr class="message-inner-separator">
-					Você não possui nenhum serviço cadastrado ainda!
+					VocÃª nÃ£o possui nenhum serviÃ§o cadastrado ainda!
 				</div>
 			</c:if>
 			<c:if test="${not empty lista }">
 			<table id="mytable" class="table table-bordred table-striped">
 				<thead>
-					<th>Nome do Serviço</th>
-					<th>Descrição</th>
-					<th>Preço</th>
+					<th>Nome do ServiÃ§o</th>
+					<th>DescriÃ§Ã£o</th>
+					<th>PreÃ§o</th>
 					<th>Editar</th>
 					<th>Excluir</th>
 				</thead>
@@ -64,8 +69,8 @@
 							<td name="nomeServ">${item.nome}</td>
 							<td name="descServ">${item.descricao}</td>
 							<td name="precoServ">${item.precoFormatado}</td>
-							<td name="edit"><a onclick="editarServico(${item.id});">Editar</a></td>
-							<td name="delete"><a onclick="deletarServico(${item.id});">Excluir</a></td>
+							<td name="edit"><a onclick="editarServico(${item.id});" style="cursor:pointer">Editar</a></td>
+							<td name="delete"><a onclick="deletarServico(${item.id});" style="cursor:pointer">Excluir</a></td>
 						</tr>
 					</c:forEach>
 				</tbody>
@@ -81,25 +86,25 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					Novo Serviço
+					Novo ServiÃ§o
 				</div>
 				<div class="modal-body">
 					<form name="cadastrarServico" method="post" action="/pegapa/cadastrarProfissional?cadastraServ=S">
 						<fieldset class="form-group">
 							<div class="input-group">
-								<span class="input-group-addon">Nome do Serviço</span> 
-								<input type="text" class="form-control" id="nomeServ" name="nomeServ" placeholder="Ex: Pintura de Fachada, Reforma de armários...etc" />
+								<span class="input-group-addon">Nome do ServiÃ§o</span> 
+								<input type="text" class="form-control" id="nomeServ" name="nomeServ" placeholder="Ex: Pintura de Fachada, Reforma de armÃ¡rios...etc" />
 							</div>
 							<div style="margin-top:20px;">
-	  							<label class="control-label" for="textarea">Descrição do serviço</label>
+	  							<label class="control-label" for="textarea">DescriÃ§Ã£o do serviÃ§o</label>
 	  							<div>                     
 	    							<textarea class="form-control" maxlength="200" id="textarea"
-	    							 name="descricaoServ" placeholder="Insira aqui uma breve descrição sobre este serviço."></textarea>
+	    							 name="descricaoServ" placeholder="Insira aqui uma breve descriÃ§Ã£o sobre este serviÃ§o."></textarea>
 	  							</div>
 							</div>
 							<div class="input-group" style="margin-top:20px;">
-								<span class="input-group-addon">Preço Base</span> 
-								<input type="text" class="form-control" id="preco" name="precoServ"/>
+								<span class="input-group-addon">PreÃ§o Base</span> 
+								<input type="text" class="form-control" id="preco" name="precoServ" maxlength="12"/>
 							</div>
 							<div style="margin-top:20px" class="pull-right">
 								<button id="sucesso" type="button" onclick="submeterCadastroServico();" class="btn btn-success">Salvar</button>
@@ -121,24 +126,24 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					Editar Serviço
+					Editar ServiÃ§o
 				</div>
 				<div class="modal-body">
 					<form name="formEditarServico" method="post" action="/pegapa/cadastrarProfissional?editarServ=S">
 						<fieldset class="form-group" id="fieldset_editar">
 							<input type="hidden" id="idServico" name="idServico" value=""/>
 							<div class="input-group">
-								<span class="input-group-addon">Nome do Serviço</span> 
+								<span class="input-group-addon">Nome do ServiÃ§o</span> 
 								<input type="text" class="form-control" name="_edit_nome" id="nomeServ_edit" />
 							</div>
 							<div style="margin-top:20px;">
-	  							<label class="control-label" for="textarea">Descrição do serviço</label>
+	  							<label class="control-label" for="textarea">DescriÃ§Ã£o do serviÃ§o</label>
 	  							<div>                     
 	    							<textarea class="form-control" maxlength="200" id="textarea_edit" name="_edit_text"></textarea>
 	  							</div>
 							</div>
 							<div class="input-group" style="margin-top:20px;">
-								<span class="input-group-addon">Preço Base</span> 
+								<span class="input-group-addon">PreÃ§o Base</span> 
 								<input type="text" class="form-control" id="preco_edit" name="_edit_preco"/>
 							</div>
 							<div style="margin-top:20px" class="pull-right">
@@ -161,14 +166,14 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					Deletar Serviço
+					Deletar ServiÃ§o
 				</div>
 				<div class="modal-body">
-					<p>Tem certeza que deseja deletar este serviço?</p>
+					<p>Tem certeza que deseja deletar este serviÃ§o?</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary" id="deletarServico" onclick="submeterDeletarServico();">Sim</button>
-    				<button type="button" data-dismiss="modal" class="btn">Não</button>
+    				<button type="button" data-dismiss="modal" class="btn">NÃ£o</button>
 				</div>
 			</div>
 		</div>

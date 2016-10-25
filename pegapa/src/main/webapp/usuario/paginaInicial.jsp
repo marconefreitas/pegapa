@@ -5,14 +5,14 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="/pegapa/icopegapa.png" >
 	<!-- Bootstrap -->
 	<link href="/pegapa/css/bootstrap.min.css" rel="stylesheet">
 	<link href="/pegapa/css/style.css" rel="stylesheet">
 	<link href="/pegapa/estilos/estilos.css" rel="stylesheet">
 	<link href="/pegapa/estilos/jquery.bxslider.css" rel="stylesheet">
 	<link href="/pegapa/estilos/estilo-form.css" rel="stylesheet">
-
-	
+	<link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 
 	<!-- Bootstrap select -->
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
@@ -25,11 +25,11 @@
 		<header class="row header-page" style="display:flex;" >
 			<!-- GAMBIARRA NA TAG FIGURE, RETIRAR DEPOIS -->
 			<figure style="float:left; padding-right:15px; order:1; position: relative; top: -17px;">
- 				<a href="paginaInicial.jsp"><img src="/pegapa/estilos/images/logo_pegapa.png" width="130px;" /></a>
+ 				<a href="paginaInicial.jsp"><img src="/pegapa/estilos/images/backlogo.jpg" class="img-logo" /></a>
 			</figure>
 			<div class="welcome" style="width: 82%; order:2">
-				<span class="glyphicon glyphicon-user" style="float: right; line-height: 33px;"></span>
-				<span style="float:right; height:100%; padding-right: 10px; line-height: 40px;">${user.nome}</span>
+				<span class="glyphicon glyphicon-user" style="float: right; line-height: 33px; padding-right: 10px;" title="${user.nome}"></span>
+				<span class="name-header">${user.nome}</span>
 			</div>
 		</header>
 	
@@ -38,26 +38,31 @@
 				<input type="hidden" value="${user.cod_user}" id="cod">
 				
 				<div class="container dynamicTile">
-					<div class="row" style="background-color: 000000;">
+					<div class="row" >
 						<a onclick="retornarDadosParaEdicao();" style="cursor:pointer;">
 							<form action="/pegapa/ServletUsuario" method="get" name="edit">
 								<input type="hidden" value="S" name="editarUsuario"/>
 								<input type="hidden" value="${user.cod_user}" id="cod" name="codUser">
-								<div class="col-sm-4 col-xs-4" >
+								<div class="col-sm-3 col-xs-6" >
 									<div id="tile1" class="tile">
-										<span >Editar Dados</span>
-										<div class="main-icon"><i class="glyphicon glyphicon-cog"></i> </div>
+										<span class="title-span" >Editar Dados</span>
+										<figure class="view main-icon" title="Editar Dados">
+											<i class="glyphicon glyphicon-cog"></i> 
+										</figure>
 									</div>
 								</div>
 							</form>
 						</a>
-						<a href="#" onclick="visualizarSolicitacoesUsuario();">
+						<a onclick="visualizarSolicitacoesUsuario();" style="cursor:pointer">
 							<form action="/pegapa/ServletUsuario" method="post" name="visualizarSolicUser">
-							<input type="hidden" value="${user.cod_user}" name="codUser">
-							<input type="hidden" value="S" name="visualiz"/>
-								<div class="col-sm-4 col-xs-4">
+								<input type="hidden" value="${user.cod_user}" name="codUser">
+								<input type="hidden" value="S" name="visualiz"/>
+								<div class="col-sm-3 col-xs-6">
 									<div id="tile2" class="tile">
-										<span>Visualizar Solicitações de Profissionais</span>
+										<span class="title-span">Profissionais Solicitados</span>
+										<figure class="view main-icon" title="Profissionais Solicitados">
+											<img src="/pegapa/estilos/images/tp_user/img1.png">
+										 </figure>
 									</div>
 								</div>
 							</form>
@@ -66,19 +71,24 @@
 							<form action="/pegapa/ServletUsuario" method="post" name="visualizarSolicForn">
 							<input type="hidden" value="${user.cod_user}" name="codUser">
 							<input type="hidden" value="S" name="visualizForn"/>
-								<div class="col-sm-4 col-xs-4">
+								<div class="col-sm-3 col-xs-6">
 									<div id="tile2" class="tile">
-										<span>Visualizar Solicitações de Fornecedores</span>
+										<span class="title-span">Fornecedores Solicitados</span>
+										<figure class="view main-icon" title="Fornecedores Solicitados">
+											<img src="/pegapa/estilos/images/fornecedor.png" style="padding-top:20px">
+										</figure>
 									</div>
 								</div>
 							</form>
 						</a>
 						<a href="#" onclick="logoutUser();">
-							<div class="col-sm-4 col-xs-4">
+							<div class="col-sm-3 col-xs-6">
 								<div id="tile3" class="tile">
 									<form action="/pegapa/ServletUsuario?sair=S" style="height: 100%;" name="logout-user" method="post">
-										<span>Sair</span>
-										<div class="main-icon"><i class="glyphicon glyphicon-off"></i></div>
+										<span class="title-span">Sair</span>
+										<figure class="main-icon view" title="Sair">
+											<i class="glyphicon glyphicon-off" ></i>
+										</figure>
 									</form>
 								</div>
 							</div>
@@ -111,3 +121,4 @@
 <!-- 	<script src="https://use.fontawesome.com/b773fb98b0.js"></script> -->
 </body>
 </html>
+

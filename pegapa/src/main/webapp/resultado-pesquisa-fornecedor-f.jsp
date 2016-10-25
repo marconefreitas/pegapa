@@ -6,11 +6,12 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="icopegapa.png" >
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/style.css" rel="stylesheet">
 	<link href="estilos/estilos.css" rel="stylesheet">
 	<link href="estilos/estilo-form.css" rel="stylesheet">
-	
+	<link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
 	<title>Resultado da Busca</title>
 </head>
@@ -20,12 +21,12 @@
 		<header class="row header-page" >
 			<!-- GAMBIARRA NA TAG FIGURE, RETIRAR DEPOIS -->
 			<figure style="float:left; padding-right:15px; top:1px; position:absolute;">
- 				<a href="usuario/paginaInicial.jsp"><img src="/pegapa/estilos/images/logo_pegapa.png" width="130px;" /></a>
+ 				<a href="usuario/paginaInicial.jsp"><img src="/pegapa/estilos/images/backlogo.jpg" class="img-logo" /></a>
 			</figure>
 			<c:if test="${not empty usuarioLogado}">
 				<div class="welcome" style="width: 90%; order:2">
-					<span class="glyphicon glyphicon-user" style="float: right; line-height: 33px;"></span>
-					<span style="float:right; height:100%; padding-right: 10px; line-height: 40px;">${user.nome}</span>
+					<span class="glyphicon glyphicon-user" style="float: right; line-height: 33px;" title="${user.nome}"></span>
+					<span class="name-header">${user.nome}</span>
 				</div>
 			</c:if>
 		</header>
@@ -36,13 +37,16 @@
   				</button>
 				Solicitação Enviada com Sucesso
 			</div>
+			<div class="alert alert-success" role="alert" id="ordenation-success" hidden>
+  				<strong>Ordenadação Concluída</strong>
+			</div>
 			<div class="row well well-sm" >
 				<div class="col-md-12" style="text-align:left;">Filtros</div>    
 
 	        	
 	        	<div class="col-md-3" id="filtros-ramoAtuacao" style="text-align:left;">
-					<select class="selectpicker" id="ramoAtuacao"  name="ramoAtuacao" data-width="100%" >
-						<option data-hidden="true" val="None">Ramo de Atuação</option>
+					<select class="selectpicker" id="ramoAtuacao"  name="ramoAtuacao" data-width="100%">
+						<option value="None">Ramo de Atuação</option>
 						<option value="Telhadista">Telhadista</option>
 						<option value="Madeireira">Madeireira</option>
 						<option value="Pintura">Pintura</option>
@@ -50,33 +54,39 @@
 						<option value="Construções em Geral">Construções em Geral</option>
 					</select>
 				</div>
-						
-				
+				<div class="col-md-1">
+					<button id="ordenation" title="Ordenar por Nota"><i class="ion-podium" style="font-size: 26px; color:blue"></i></button>
+				</div>
 			</div>
 
+			<div id="section-providers-physical">
 			<c:forEach items="${lista}" var="item" varStatus="status">
 				<div class="row profissional-box col-md-4 col-sm-6" >
-					<div style="float:left;">
-						<img src="/pegapa/images/filename${item.codFornecedor}.jpg" id="${item.codFornecedor}" onclick="recuperaFornecedorLojaFisica(this);"  style="height: 175px;width: 156px; cursor:pointer;" class="img-rounded">
+					<div class="professional-box-intern" onclick="recuperaFornecedorLojaFisica(this);" >
+						<input type="hidden" value="${item.avaliacao}" id="notaFornF"/>
+						<div style="float:left;">
+							<img src="/pegapa/images/filename${item.codFornecedor}.jpg" name="photo" id="${item.codFornecedor}" style="height: 175px;width: 156px; cursor:pointer;" class="img-rounded">
+						</div>
+						<blockquote>
+							<p class="name">${item.nomeFantasia}</p>
+							<small><cite>${item.bairro}, ${item.estado} <i class="icon-map-marker"></i></cite></small>
+						</blockquote>
+						<div style="text-align:left; float:left; padding-left:10px;">
+							<p>
+		        				<i class="glyphicon glyphicon-envelope"></i><span class="mail" style="padding-left:10px;">${item.email}</span><br>
+		      					<i class="glyphicon glyphicon-wrench"></i><span class="work" id="ramo" style="padding-left:10px;">${item.ramoAtuacao}</span><br>
+		      				</p>
+						</div>
 					</div>
-					<blockquote>
-						<p class="name">${item.nomeFantasia}</p>
-						<small><cite>${item.bairro}, ${item.estado} <i class="icon-map-marker"></i></cite></small>
-					</blockquote>
-					<div style="text-align:left; float:left; padding-left:10px;">
-						<p>
-	        				<i class="glyphicon glyphicon-envelope"></i><span class="mail" style="padding-left:10px;">${item.email}</span><br>
-	      					<i class="glyphicon glyphicon-envelope"></i><span class="mail" style="padding-left:10px;">${item.ramoAtuacao}</span><br>
-	      				</p>
-					</div>
-							
 				</div>
 			</c:forEach>
+			</div>
 		</div>
 		<div style="clear:both;"></div>
 		<footer class="row footer-page">
 		</footer>
 	</div>
+	
 	<div class="modal fade" id="not-logged" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -92,10 +102,9 @@
 
 <script src="js/bootstrap.min.js"></script>
 
-<!-- <script type="text/javascript" src="javascript/profissional.js" charset="utf-8"></script> -->
 <script type="text/javascript" src="javascript/fornecedor.js" charset="utf-8"></script>
 <script type="text/javascript" src="javascript/busca.js" charset="utf-8"></script>
-
+<script type="text/javascript" src="javascript/filtersproviders.js" charset="utf-8"></script>
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.js"></script>

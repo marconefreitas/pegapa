@@ -54,7 +54,7 @@ public class SolicitacaoRepository {
 	
 	public List<Solicitacao> buscaSolicitacoesRecusadasOuAceitasDeFornecedor(Fornecedor f){
 		TypedQuery<Solicitacao> query = this.manager
-				.createQuery("select s from solicitacao s where s.fornecedor.codFornecedor =:id and s.situacao = :conf or s.situacao = :neg", Solicitacao.class);
+				.createQuery("select s from solicitacao s where s.fornecedor.codFornecedor =:id and (s.situacao = :conf or s.situacao = :neg)", Solicitacao.class);
 		query.setParameter("id", f.getCodFornecedor());
 		query.setParameter("conf", SituacaoSolicitacao.CONFIRMADO);
 		query.setParameter("neg", SituacaoSolicitacao.RECUSADO);

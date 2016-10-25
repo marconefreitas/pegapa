@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,6 +36,7 @@ import br.com.pegapa.entity.Solicitacao;
 import br.com.pegapa.entity.Usuario;
 import br.com.pegapa.repository.SolicitacaoRepository;
 import br.com.pegapa.repository.UsuarioRepository;
+import br.com.pegapa.util.JavaMailUtil;
 
 
 @WebServlet("/ServletUsuario")
@@ -67,8 +69,9 @@ public class UsuarioServlet extends HttpServlet{
 	
 	private void enviarSolicitacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException  {
 		JSONObject json;
+		Usuario usr = (Usuario) request.getSession().getAttribute("user");
+		String mail = request.getParameter("email");
 		try{
-			Usuario usr = (Usuario) request.getSession().getAttribute("user");
 			Integer cod = Integer.valueOf(request.getParameter("id"));
 			Solicitacao solic = new Solicitacao();
 			String nomeServico = request.getParameter("nomeServico");
@@ -91,6 +94,9 @@ public class UsuarioServlet extends HttpServlet{
 			solic.setDescricaoSolicitacao(request.getParameter("desc"));
 			solic.setDtModificacao(dt);
 			solicRepo.enviarSolicitacao(solic);
+			
+			
+			
 			json = new JSONObject();
 			json.put("sucesso", "Mensagem Enviada com Sucesso");
 		} catch(Exception e){
@@ -99,6 +105,15 @@ public class UsuarioServlet extends HttpServlet{
 			json.put("erro", "Erro");
 		}
 		//SituacaoSolicitacao.ENVIADO;
+		//envio de email aqui embaixo
+		String mensagem = "Você foi solicitado pelo(a) " + usr.getNome() + ". Entre no PegaPa e dê uma olhada.";
+		
+		/*
+		try {
+			JavaMailUtil.enviarEmail(mail, "Você tem uma Solicitação Nova", mensagem);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}*/
 		response.getWriter().write(json.toString());
 		
 		
@@ -107,6 +122,7 @@ public class UsuarioServlet extends HttpServlet{
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setCharacterEncoding("UTF-8");
 		if(request.getParameter("editarUsuario") != null){
 			editar(request, response);
 		} else if(request.getParameter("confEdicao") !=null ){
@@ -176,13 +192,13 @@ public class UsuarioServlet extends HttpServlet{
 		Usuario user = repo.consultaPorId(Integer.valueOf(codigo));
 		
 		user.setNome(request.getParameter("nome"));
-		user.setCpf(request.getParameter("cpf"));
-		user.setEstado(request.getParameter("estado"));
-		user.setCidade(request.getParameter("cidade"));
-		user.setTelefone(request.getParameter("tel"));
-		user.setCelular(request.getParameter("cel"));		
+		user.setCpf(request.getParameter("cpf").replaceAll("[.-]", ""));
+		user.setEstado(request.getParameter("estado-user"));
+		user.setCidade(request.getParameter("cidade-user"));
+		user.setTelefone(request.getParameter("tel").replaceAll("[-)( ]", ""));
+		user.setCelular(request.getParameter("cel").replaceAll("[-)( ]", ""));		
 
-		user.getEndereco().setCep(request.getParameter("cep"));
+		user.getEndereco().setCep(request.getParameter("cep").replace("[-]", ""));
 		user.getEndereco().setNumero(request.getParameter("numero"));
 		user.getEndereco().setRua(request.getParameter("rua"));
 
@@ -210,19 +226,19 @@ public class UsuarioServlet extends HttpServlet{
 		JSONObject json = new JSONObject();
 		try{
 		
-			usuario.setCpf(request.getParameter("cpf"));
+			usuario.setCpf(request.getParameter("cpf").replaceAll("[.-]", ""));
 			usuario.setEmail(request.getParameter("email"));
 			usuario.setNome(request.getParameter("nome"));
 			usuario.setPerfil(Perfil.SOLICITANTE);
-			endereco.setCep(request.getParameter("cep"));
+			endereco.setCep(request.getParameter("cep").replaceAll("[-]", ""));
 			endereco.setRua(request.getParameter("logradouro"));
 			endereco.setNumero(request.getParameter("numero"));
 			usuario.setEndereco(endereco);
 			usuario.setCidade(request.getParameter("cidade"));
 			usuario.setEstado(request.getParameter("estado"));
 			usuario.setSenha(request.getParameter("senhaUsuario"));
-			usuario.setTelefone(request.getParameter("telefone"));
-			usuario.setCelular(request.getParameter("celular"));
+			usuario.setTelefone(request.getParameter("telefone").replaceAll("[-)( ]", ""));
+			usuario.setCelular(request.getParameter("celular").replaceAll("[-)( ]", ""));
 			
 			repo.inserirUsuario(usuario);
 			json.put("sucesso", "Cadastro Realizado com Sucesso");

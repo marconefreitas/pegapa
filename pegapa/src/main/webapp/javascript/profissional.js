@@ -2,27 +2,12 @@
  * 
  */
 
-$("#cadastrarProfissional").click(function(event){
-	event.preventDefault();
-	submeterCadastroProfissional();
-});
-
-
-
 $("#cancelarProfissional").click(function(){
 	cancelaProfissional();
 });
 
 $("#ativa-cadastrar-profissional").click(function(){
 	$('#modal-cadastro-profissional').modal();
-});
-
-$("#ocupacao").on("change", function(){
-	if($( "#ocupacao option:selected" ).text() == "Outro"){
-		$("#informar-ocupacao").css("display", "block");
-	} else{
-		$("#informar-ocupacao").css("display", "none");
-	}
 });
 
 $('#estado-prof').on("change", function(){
@@ -132,68 +117,8 @@ function executaPesquisaBairro(tipo){
 	});
 }
 
-function submeterCadastroProfissional(){
-	var senha  = $("#senhaProfissional").val();
-	var confirmaSenha = $("#confirmSenhaProfissional").val();
-	if(senha != confirmaSenha){
-		alert("As senhas informadas não conferem.")
-		return;
-	} else{
-		var tiraTudoQueNaoForDigito = /[^\d]+/g;
-		
-		var telProf = $("#telefoneProfissional").val().replace(tiraTudoQueNaoForDigito, "");
-		var celProf = $("#celularProfissional").val().replace(tiraTudoQueNaoForDigito, "");
-		
-		if($("#ocupacao option:selected").text() == "Escolha uma Ocupação"){
-			$("#ocupacao").val("");
-		}
-		
-		if($("#experiencia option:selected").text() == "Sua Experiência na área"){
-			$("#experiencia").val("");
-		}
-		
-		//TODO Acrescentar obrigatoriedade aqui embaixo
-		if($("#cidade option:selected").text() == "Escolha uma cidade"){
-			alert("Escolha uma cidade");
-			return;
-		}
-		if($("#estado option:selected").text() == "Escolha um Estado"){
-			alert("Escolha um estado");
-			return;
-		}
-		
-		$("#cidade").val($("#cidade option:selected").text());
-		$("#estado").val($("#estado option:selected").text());
-		var image;
-		$('#imagem').change(function(e){
-			image = new FormData();
-			image.append('imagem', e.target.files[0]);
-		})
-		var form = new FormData($('#formProfissional')[0]);
-		form.append('estado-prof', $("#estado-prof option:selected").text());
-		form.append('cidade-prof', $("#cidade-prof option:selected").text());
-		form.append('bairros-prof', $("#bairros-prof option:selected").text())
-		$.ajax({
-			
-			url: "cadastrarProfissional",
-			data: form,
-			processData : false,
-			contentType: false,
-			method: 'POST',
-			success :  function (data){
-				var result = $.parseJSON(data);
-				if(result.sucesso){
-					console.log("sucesso");
-					$("#modal-cadastro-profissional .alert").addClass("alert-success").text(result.sucesso).css("display", "block");
-					//cancelaTudo('modal-cadastro-profissional');
-				} else if(result.erro){
-					console.log("erro");
-					$("#modal-cadastro-profissional .alert").addClass("alert-danger").text(result.erro).css("display", "block");
-				}
-			}
-		});
-	}
-}
+
+
 
 
 $("#login-profissional").on("click", function(event){
@@ -261,6 +186,7 @@ function enviaSolicitacao(idProf){
 			solicitar : 'S',
 			id : idProf,
 			desc : descricaoSolic,
+			email : $('#mail').text(),
 			nomeServico: nomeServico
 		},
 		method: 'POST',
@@ -417,32 +343,48 @@ function editarDadosProfissional(){
 
 function confirmarAlteracaoDadosProfissional(){
 	
+	var validate = true;
+	$('#nameProfessional, #descriptionProf, #streetProf, #numberProf,' +
+	  '#mailProf, #cpfProf, #cepProf, #aExp, #mExp, #phone1, #phone2').each(function(){
+		$(this).blur();
+		if($(this).attr('validated') == "false"){
+			 validate = false;
+		 }
+	});
 	
-	var estado = $("#editar-estado-prof option:selected").text();
-	var cidade = $("#editar-cidade-prof option:selected").text();
-	var bairro = $("#editar-bairros-prof option:selected").text();
-	
-	if(estado == "Selecione um Estado"){
-		var estadoAnterior = $('#estadoAnteriorProf').html();
-		$("#editar-estado-prof option:selected").val(estadoAnterior);
-	} else{
-		$("#editar-estado-prof option:selected").val(estado);
+	var professionToValidate = $('button[data-id="ocupacao"]').blur();
+	if($(professionToValidate).attr('validated') == "false"){
+		validate = false;
 	}
 	
-	if(cidade == "Selecione uma Cidade"){
-		var cidadeAnterior =  $('#cidadeAnteriorProf').html();
-		$("#editar-cidade-prof option:selected").val(cidadeAnterior);
-	} else{
-		$("#editar-cidade-prof option:selected").val(cidade);
+	var stateToValidate = $('button[data-id="editar-estado-prof"]').blur();
+	if($(stateToValidate).attr('validated') == "false"){
+		validate = false;
 	}
 	
-	if(bairro == "Selecione um Bairro"){
-		var bairroAnterior =  $('#bairroAnteriorProf').html();
-		$("#editar-bairros-prof option:selected").val(bairroAnterior);
-	}else{
-		$("#editar-bairros-prof option:selected").val(bairro);
+	var cityToValidate = $('button[data-id="editar-cidade-prof"]').blur();
+	if($(cityToValidate).attr('validated') == "false"){
+		validate = false;
 	}
 	
+	var neighToValidate = $('button[data-id="editar-bairros-prof"]').blur();
+	if($(neighToValidate).attr('validated') == "false"){
+		validate = false;
+	}
+	
+	if(!validate){
+		return;
+	}
+	
+	var estado = $('#editar-estado-prof option:selected').text();
+	var cidade = $('#editar-cidade-prof option:selected').text();
+	var bairro = $('#editar-bairros-prof option:selected').text();
+	
+	$('#editar-estado-prof option:selected').val(estado);
+	$('#editar-cidade-prof option:selected').val(cidade);
+	$('#editar-bairros-prof option:selected').val(bairro);
+	 
+	$('#editar-estado-prof').val()
 	var image;
 	$('#imagemProfissional').change(function(e){
 		if( $('#imagemProfissional').val() != ""){

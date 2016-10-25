@@ -13,7 +13,7 @@
 	<link href="/pegapa/estilos/estilos.css" rel="stylesheet">
 	<link href="/pegapa/estilos/jquery.bxslider.css" rel="stylesheet">
 	<link href="/pegapa/estilos/estilo-form.css" rel="stylesheet">
-
+	<link rel="shortcut icon" href="/pegapa/icopegapa.png" >
 	<!-- Bootstrap select -->
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
 	<link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
@@ -22,11 +22,11 @@
 </head>
 </head>
 <body>
-	<div class="container-fluid" >
+	<div class="container-fluid"  style="min-width:730px;">
 		<header class="row header-page" style="display:flex;" >
 			<!-- GAMBIARRA NA TAG FIGURE, RETIRAR DEPOIS -->
 			<figure style="float:left; padding-right:15px; order:1; position: relative; top: -17px;">
- 				<a href="paginaInicial.jsp"><img src="/pegapa/estilos/images/logo_pegapa.png" width="130px;" /></a>
+ 				<a href="paginaInicial.jsp"><img src="/pegapa/estilos/images/backlogo.jpg" class="img-logo" /></a>
 			</figure>
 			<div class="welcome" style="width: 82%; order:2">
 				<span class="glyphicon glyphicon-user" style="float: right; line-height: 33px;"></span>
@@ -34,7 +34,11 @@
 			</div>
 		</header>
 	
-		<div role="main">
+		<div role="main" style="min-height:450px;">
+			<nav class="breadcrumb">
+				<a class="breadcrumb-item" href="/pegapa/profissional/paginaInicial.jsp">Página Inicial</a> /
+  				<span class="breadcrumb-item active">Visualização de Solicitações</span>
+			</nav>
 			<form action="/pegapa/cadastrarProfissional?listarSolic=S" name="visuSolic" method="post" >
 				<input type="hidden" name="id" value="${prof.id}"/>
 			</form>
@@ -55,27 +59,25 @@
 				</div>
 			</c:if>
 			<c:forEach items="${lista}" var="item" >
-				<div class="row well" style="margin: 0 auto 15px; width:80%; padding:0">
+				<div class="row well" style="margin: 0 auto 15px; width:80%; padding:0; ">
 					
-					<div class="media" style="padding:19px; width:88%; float:left;" >
+					<div class="media" style="padding:19px; width:100%; float:left; display:flex; padding:0" >
 						<input type="hidden" id="${item.idSolicitacao}"/>
-						<div class="pull-left">
+						<div class="pull-left" style="padding:19px;">
 							<img src="/pegapa/estilos/images/emptyuser.png" class="media-object media-icons" height="75px;" width="75px;">
 						</div>
 						
-						<div class="media-body" style="text-align:left; height:75px">
+						<div class="media-body" style="text-align:left; height:100%; width:85%; padding:19px;">
 							<h4 class="media-heading" style="float:left;">${item.usuario.nome }</h4>
 							<small style="float:right;"><i style="font-style:italic; color: gray;">Solicitado em: ${item.dtFormatada }</i></small>
 							<p style="clear:both;">${item.descricaoSolicitacao }</p>
 							<address class="ender">Endereço: ${item.usuario.endereco.rua }, ${item.usuario.endereco.numero }, ${item.usuario.cidade}</address>
 							<p style="width:50%; float:left;"><i class="glyphicon glyphicon-earphone"> ${item.usuario.telefone}</i>
 						</div>
-						
-					</div>
-					<div class="botoes" style="float:right; width:10%;">
-						<button type="button" class="btn btn-primary aceitar" onclick="aceitarSolicitacao(${item.idSolicitacao});"><i class="glyphicon glyphicon-ok"></i></button>
-						<button type="button" class="btn btn-danger recusar" onclick="recusarSolicitacao(${item.idSolicitacao});"><i class="glyphicon glyphicon-remove"></i></button>
-						
+						<div class="botoes pull-right" style="overflow:hidden">
+							<button type="button" class="btn btn-primary aceitar" onclick="aceitarSolicitacao(${item.idSolicitacao});"><i class="glyphicon glyphicon-ok"></i></button>
+							<button type="button" class="btn btn-danger recusar" onclick="recusarSolicitacao(${item.idSolicitacao});"><i class="glyphicon glyphicon-remove"></i></button>
+						</div>
 					</div>
 				</div>
 			</c:forEach>

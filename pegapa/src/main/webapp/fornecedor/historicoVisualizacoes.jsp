@@ -13,7 +13,7 @@
 	<link href="/pegapa/estilos/estilos.css" rel="stylesheet">
 	<link href="/pegapa/estilos/jquery.bxslider.css" rel="stylesheet">
 	<link href="/pegapa/estilos/estilo-form.css" rel="stylesheet">
-
+	<link rel="shortcut icon" href="/pegapa/icopegapa.png" >
 	<!-- Bootstrap select -->
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
 
@@ -25,7 +25,7 @@
 		<header class="row header-page" style="display:flex;" >
 			<!-- GAMBIARRA NA TAG FIGURE, RETIRAR DEPOIS -->
 			<figure style="float:left; padding-right:15px; order:1; position: relative; top: -17px;">
- 				<a href="/pegapa/fornecedor/paginaInicial.jsp" title="Página Inicial"><img src="/pegapa/estilos/images/logo_pegapa.png" width="130px;" /></a>
+ 				<a href="/pegapa/fornecedor/paginaInicial.jsp" title="Página Inicial"><img src="/pegapa/estilos/images/backlogo.jpg" class="img-logo" /></a>
 			</figure>
 			<div class="welcome" style="width: 82%; order:2">
 				<span class="glyphicon glyphicon-user" style="float: right; line-height: 33px;"></span>
@@ -34,6 +34,10 @@
 		</header>
 	
 		<div role="main">
+			<nav class="breadcrumb">
+				<a class="breadcrumb-item" href="/pegapa/fornecedor/paginaInicial.jsp">Página Inicial</a> /
+  				<span class="breadcrumb-item active">Histórico de Solicitações</span>
+			</nav>
 			<h3>Solicitações Confirmadas</h3>
 			<div class="row" style="margin: 0 auto 15px; width:80%; padding:0">
 			<c:forEach items="${listaA}" var="item" >

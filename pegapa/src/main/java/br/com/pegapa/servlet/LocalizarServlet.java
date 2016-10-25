@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -73,7 +74,12 @@ public class LocalizarServlet extends HttpServlet {
 
     private void recuperaFornecedorCompleto(HttpServletRequest request, HttpServletResponse response) throws IOException {
     	Integer codigo = Integer.valueOf(request.getParameter("id"));
+    	Double nota = fornRepo.recuperarNotaFornecedor(codigo);
+    	if(nota != null){
+    		nota = new BigDecimal(nota).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+    	}
 		Fornecedor f = fornRepo.recuperaFornecedorCompleto(codigo);
+		f.setAvaliacao(nota);
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		String fornecedor = gson.toJson(f);
 		response.setContentType("application/json");
@@ -83,6 +89,9 @@ public class LocalizarServlet extends HttpServlet {
 	private void recuperaProfissionalCompleto(HttpServletRequest request, HttpServletResponse response) throws IOException {
     	Integer codigo = Integer.valueOf(request.getParameter("id"));
     	Double nota = profRepo.recuperNotaDoProfisisonal(codigo);
+    	if(nota != null){
+    		nota = new BigDecimal(nota).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+    	}
 		Profissional p = profRepo.recuperaProfissionalCompleto(codigo);
 		p.setNota(nota);
 		System.out.println(p);
@@ -151,9 +160,13 @@ public class LocalizarServlet extends HttpServlet {
 	
 	private void localizarFornecedorVirtual(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String ramoAtuacao = request.getParameter("ramoAtuacao").equals("Ramo de Atuação")  ? "" : request.getParameter("ramoAtuacao");	
+		Double nota = 0d;
 		List<Fornecedor> fornecedores = fornRepo.listarFornecedoresVirtuais(ramoAtuacao);
 		if(!fornecedores.isEmpty()){
 			for(Fornecedor f : fornecedores){
+				nota = fornRepo.recuperarNotaFornecedor(f.getCodFornecedor());
+				nota = verificaNota(nota);
+				f.setAvaliacao(nota);
 				if(f.getFoto() != null){
 					InputStream baos = new ByteArrayInputStream(f.getFoto());
 					ImageIO.read(baos);
@@ -173,6 +186,8 @@ public class LocalizarServlet extends HttpServlet {
 		Bairro bairroFromBD = new Bairro("");
 		Estado estadoFromBD = new Estado("");
 		Cidade cidadeFromBD = new Cidade("");
+		
+		Double nota = 0d;
 		
 		String estado = request.getParameter("localiza-estado").equals("Selecione um Estado")  ? "" : request.getParameter("localiza-estado");
 		String cidade = request.getParameter("localiza-cidade").equals("Selecione uma Cidade") ? "" : request.getParameter("localiza-cidade");
@@ -201,6 +216,9 @@ public class LocalizarServlet extends HttpServlet {
 			fornecedores = repo.localizarFornecedores(estadoFromBD.getNome(), cidadeFromBD.getNome(), bairroFromBD.getNome());
 			if(!fornecedores.isEmpty()){
 				for(Fornecedor f : fornecedores){
+					nota = fornRepo.recuperarNotaFornecedor(f.getCodFornecedor());
+					nota = verificaNota(nota);
+					f.setAvaliacao(nota);
 					if(f.getFoto() != null){
 						InputStream baos = new ByteArrayInputStream(f.getFoto());
 						ImageIO.read(baos);
@@ -218,11 +236,13 @@ public class LocalizarServlet extends HttpServlet {
 		}
 
 		if(!profissionais.isEmpty()){
-			request.getSession().setAttribute("lista", profissionais);
 			for(Profissional p : profissionais){
+				nota = profRepo.recuperNotaDoProfisisonal(p.getId());
+				nota = verificaNota(nota);
+				p.setNota(nota);
 				if(p.getImagem() != null){
 					InputStream baos = new ByteArrayInputStream(p.getImagem());
-					BufferedImage img = ImageIO.read(baos);
+					ImageIO.read(baos);
 					baos.close();
 					OutputStream f = new BufferedOutputStream(new FileOutputStream("C:\\img\\" + p.getId() + ".jpg"));
 					f.write(p.getImagem());
@@ -230,6 +250,7 @@ public class LocalizarServlet extends HttpServlet {
 					f.close();
 				}
 			}
+			request.getSession().setAttribute("lista", profissionais);
 			response.sendRedirect("resultado-pesquisa.jsp");
 
 		}else{
@@ -238,6 +259,13 @@ public class LocalizarServlet extends HttpServlet {
 	}
 	
 	
+	private Double verificaNota(Double nota) {
+		if(nota != null){
+    		nota = new BigDecimal(nota).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+    	}
+		return nota;
+	}
+
 	public void selecionarProfissional(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		Integer codigo = Integer.valueOf(request.getParameter("id"));
 		Gson gson = new Gson();

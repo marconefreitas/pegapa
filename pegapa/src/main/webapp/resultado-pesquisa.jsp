@@ -5,12 +5,13 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<link rel="shortcut icon" href="icopegapa.png" >
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/style.css" rel="stylesheet">
 	<link href="estilos/estilos.css" rel="stylesheet">
 	<link href="estilos/estilo-form.css" rel="stylesheet">
-	
+	<link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
 	<title>Resultado da Busca</title>
 </head>
@@ -20,7 +21,7 @@
 		<header class="row header-page" >
 			<!-- GAMBIARRA NA TAG FIGURE, RETIRAR DEPOIS -->
 			<figure style="float:left; padding-right:15px; top:1px; position:absolute;">
- 				<a href="usuario/paginaInicial.jsp"><img src="/pegapa/estilos/images/logo_pegapa.png" width="130px;" /></a>
+ 				<a href="usuario/paginaInicial.jsp"><img src="/pegapa/estilos/images/backlogo.jpg" class="img-logo" /></a>
 			</figure>
 			<c:if test="${not empty usuarioLogado}">
 				<div class="welcome" style="width: 90%; order:2">
@@ -36,6 +37,9 @@
   				</button>
 				Solicitação Enviada com Sucesso
 			</div>
+			<div class="alert alert-success" role="alert" id="ordenation-success" hidden>
+  				<strong>Ordenadação Concluída</strong>
+			</div>
 			<div class="row well well-sm" >
 				<div class="col-md-12" style="text-align:left;">Filtros</div>    
 	        	<div class="col-md-3" style="text-align:left;">
@@ -50,10 +54,11 @@
 					<select id="ocup-select" class="selectpicker"  >
 						<option value="n" selected="true">Todas</option>
 						<c:forEach items="${lista}" var="item" varStatus="status">
-							<option value="${item.ocupacao}">${item.ocupacao}</option>
+							<option name="ocupacoes" value="${item.ocupacao}">${item.ocupacao}</option>
 						</c:forEach>
 					</select>
 				</div>
+				
 						
 				<div class="col-md-3" id="filtros-experiencia" style="display:none; text-align:left;">
 					<select id="exp-select" class="selectpicker"  >
@@ -64,17 +69,22 @@
 					</select>
 				
 				</div>
-				
+				<div class="col-md-1 col-xs-12">
+					<button id="ordenation-professional" title="Ordenar por Nota"><i class="ion-podium" style="font-size: 26px; color:blue"></i></button>
+				</div>
 			</div>
 
+			<div id="section-professionals">
 			<c:forEach items="${lista}" var="item" varStatus="status">
 				<div class="row profissional-box col-md-4 col-sm-6" >
+					<div class="professional-box-intern">
 					<input type="hidden" value="${item.anosExperiencia}" id="ano"/>
+					<input type="hidden" value="${item.nota}" id="notaProf"/>
 					<div style="float:left;">
-						<img src="LocalizarServlet?img=${item.id}" id="${item.id}" onclick="recuperaProfissionalCompleto(this, ${item.id})" style="height: 175px;width: 156px; cursor:pointer;" class="img-rounded">
+						<img src="LocalizarServlet?img=${item.id}" id="${item.id}" onclick="recuperaProfissionalCompleto(this, ${item.id})" style="height:175px;width:156px;cursor:pointer;" class="img-rounded">
 					</div>
 					
-					<div style="text-align:left; float:left; padding-left:10px;">
+					<div style="text-align:left; float:left; padding-left:9px;">
 						<blockquote>
 							<p class="name">${item.nome}</p>
 							<small><cite>${item.bairro}, ${item.estado} <i class="icon-map-marker"></i></cite></small>
@@ -86,7 +96,9 @@
 					</div>
 							
 				</div>
+				</div>
 			</c:forEach>
+			</div>
 		</div>
 		<div style="clear:both;"></div>
 		<footer class="row footer-page">
@@ -118,7 +130,11 @@
 	$('.selectpicker').selectpicker({
 	  size: 4
 	});
-		
+	
+	$('[name="ocupacoes"]').each(function(){
+		  $(this).siblings("[value='"+ this.value+"']").remove();
+	});
+	$('.selectpicker').selectpicker('refresh');
 </script>
 
 </body>
