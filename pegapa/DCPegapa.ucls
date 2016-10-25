@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.11" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <class id="1" language="java" name="br.com.pegapa.entity.Bairro" project="pegapa" 
+    file="/pegapa/src/main/java/br/com/pegapa/entity/Bairro.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="154" width="145" x="12" y="-349"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="br.com.pegapa.entity.Cidade" project="pegapa" 
+    file="/pegapa/src/main/java/br/com/pegapa/entity/Cidade.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="155" width="149" x="185" y="-346"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="br.com.pegapa.entity.Comentario" project="pegapa" 
+    file="/pegapa/src/main/java/br/com/pegapa/entity/Comentario.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="195" x="354" y="-346"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="br.com.pegapa.entity.Endereco" project="pegapa" 
+    file="/pegapa/src/main/java/br/com/pegapa/entity/Endereco.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="139" width="137" x="574" y="-346"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="br.com.pegapa.entity.Estado" project="pegapa" 
+    file="/pegapa/src/main/java/br/com/pegapa/entity/Estado.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="173" width="173" x="1" y="-173"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="br.com.pegapa.entity.Fornecedor" project="pegapa" 
+    file="/pegapa/src/main/java/br/com/pegapa/entity/Fornecedor.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="441" width="241" x="204" y="-124"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <enumeration id="7" language="java" name="br.com.pegapa.entity.Perfil" project="pegapa" 
+    file="/pegapa/src/main/java/br/com/pegapa/entity/Perfil.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="815" y="-225"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </enumeration>  
+  <class id="8" language="java" name="br.com.pegapa.entity.Profissional" project="pegapa" 
+    file="/pegapa/src/main/java/br/com/pegapa/entity/Profissional.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="476" width="214" x="489" y="-123"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
